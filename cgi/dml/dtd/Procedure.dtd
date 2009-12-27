@@ -1,0 +1,23 @@
+<!ELEMENT procedure (titel,doel,invoer,uitvoer,werkwijze,bijzonder,hoetetesten,testgevallen)>
+<!ELEMENT titel	(#PCDATA)>
+<!ELEMENT doel	(regel)>
+<!-- doel kan 0, 1 of meer REGELs bevatten -->
+<!ELEMENT invoer	(regel)>
+<!-- invoer kan 0, 1 of meer REGELs bevatten -->
+<!ELEMENT uitvoer	(regel)>
+<!-- uitvoer kan 0, 1 of meer REGELs bevatten -->
+<!ELEMENT werkwijze	(regel,tabel)>
+<!-- werkwijze kan 1 of meer REGELs bevatten en 1 of meer TABELlen-->
+<!ELEMENT bijzonder	(regel,tabel)>
+<!-- bijzonder kan 1 of meer REGELs bevatten en 1 of meer TABELlen-->
+<!ELEMENT hoetetesten	(regel,tabel)>
+<!-- hoetetesten kan 1 of meer REGELs bevatten en 1 of meer TABELlen-->
+<!ELEMENT testgevallen	(regel,tabel)>
+<!-- testgevallen kan 1 of meer REGELs bevatten en 1 of meer TABELlen-->
+<!ELEMENT regel (#PCDATA)>
+<!ATTLIST regel inspring CDATA #IMPLIED bullet CDATA #IMPLIED nummer CDATA #IMPLIED>
+<!ELEMENT tabel (rij)>
+<!ELEMENT rij (cel)>
+<!ELEMENT cel (#PCDATA)>
+<!ATTLIST cel kolom CDATA #IMPLIED rij CDATA #IMPLIED>
+

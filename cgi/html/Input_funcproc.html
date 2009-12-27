@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>inputform</title>
+<link type="text/css" href="../style/DocTool.css" rel="stylesheet">
+</head>
+<body>
+<!-- voorlopig geen aparte forms -->
+  <form action="http://doctool.pythoneer.nl/cgi-bin/edit.py">
+  <input type="hidden" name="hWhat" id="hWhat" value="%s"/>
+  <input type="hidden" name="hProj" id="hProj" value="%s"/>
+  <input type="hidden" name="hCat" id="hCat" value="%s"/>
+  <input type="hidden" name="hWhich" id="hWhich" value="%s"/>
+  <table>
+  <tr>
+    <td width="20em">Doel:</td>
+    <td colspan="2"><input type="text" name="txtDoel" id="txtDoel" value="%s" size="80" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="2"><input type="submit" name="pbKort" id="pbKort" value="Alle wijzigingen opslaan" /></td>
+  </tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Uitgangssituatie(s):</td></tr>
+  <tr><td colspan="3"><textarea name="txtInvoer" id="txtInvoer" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Resultaatsituatie(s) en -product(en):</td></tr>
+  <tr><td colspan="3"><textarea name="txtUitvoer" id="txtUitvoer" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Beschrijving:</td></tr>
+  <tr><td colspan="3"><textarea name="txtBeschr" id="txtBeschr" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Relaties:</td></tr>
+  <tr>
+    <td colspan="2">Hoort bij welk(e) gebruikersspecificatie(s)</td>
+	<td><select size="2" name="selUserspec" id="selUserspec" multiple="multiple">%s</select></td>
+  </tr>
+  <tr>
+    <td colspan="2">Wordt gebruikt door welke gebruikersta(a)k(en)</td>
+	<td><select size="2" name="selFunctask" id="selFunctask" multiple="multiple">%s</select></td>
+  </tr>
+  <tr>
+    <td colspan="2">Wordt gebruikt door welk(e) functioneel proces(sen)</td>
+	<td><select size="2" name="selFuncproc" id="selFuncproc" multiple="multiple">%s</select></td>
+  </tr>
+  </table>
+  </form>
+  <a href="#top">Naar het begin van de pagina</a>
+  </body>
+</html>

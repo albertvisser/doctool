@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>inputform</title>
+<link type="text/css" href="../style/DocTool.css" rel="stylesheet">
+</head>
+<body>
+<!-- voorlopig geen aparte forms -->
+  <form action="http://doctool.pythoneer.nl/cgi-bin/edit.py">
+  <input type="hidden" name="hWhat" id="hWhat" value="%s"/>
+  <input type="hidden" name="hProj" id="hProj" value="%s"/>
+  <input type="hidden" name="hCat" id="hCat" value="%s"/>
+  <input type="hidden" name="hWhich" id="hWhich" value="%s"/>
+  <table>
+  <tr>
+    <td>Naam entiteit:</td>
+    <td colspan="2"><input type="text" name="txtNaam" id="txtNaam" value="%s" size="80" /></td>
+  </tr>
+  <tr>
+    <td>Functie:</td>
+    <td colspan="2"><input type="text" name="txtFunctie" id="txtFunctie" value="%s" size="80" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="2"><input type="submit" name="pbKort" id="pbKort" value="Alle wijzigingen opslaan" /></td>
+  </tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Attributen:<br />(eerste regel: naam,type,entiteit,volgnummer; tweede regel: omschrijving; derde regel: bijzonderheden)</td></tr>
+  <tr><td colspan="3"><textarea name="txtAttr" id="txtAttr" rows="16" cols="80" />%s
+naam: ...... (......) sleutel voor ........... 
+oms:  ..................... 
+bijz: .....................</textarea></td></tr>
+  <tr><td colspan="3">Levensloop:</td></tr>
+  <tr><td colspan="3"><textarea name="txtLifeC" id="txtLifeC" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Relaties:</td></tr>
+  <tr>
+    <td colspan="2">Hoort bij welk(e) functione(e)l()e proces(sen)</td>
+	<td><select size="2" name="selFuncproc" id="selFuncproc" multiple="multiple">%s</select></td>
+  </tr>
+  </table>
+  </form>
+  <a href="#top">Naar het begin van de pagina</a>
+</body>
+</html>

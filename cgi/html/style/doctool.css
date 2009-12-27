@@ -1,0 +1,214 @@
+body {
+	width: 800px;
+	font:12px/1.2 Verdana, Arial, Helvetica, sans-serif;
+	color: black ;
+	background-color:#f0e8dc;
+	padding:0px;
+	margin:10px;
+}
+.full {display: block}
+.half {width: 50%; float:left; }
+.nw1 { width: 11%; float: left; }
+.nw2 { width: 89%; float: left; }
+.tb1 { width: 30%; float:left; text-transform: capitalize; }
+.tb2 { width: 35%; float:left; text-transform: capitalize; }
+.kw1 {width: 25%; float:left; }
+.kw3 {width: 75%; float:left; }
+/*
+.kw1b2 {width: 22%; float:left;  border-style: solid; border-width: 2px 2px 1px 1px; padding: 5px}
+.kw3b2 {width: 72%; float:left;  border-style: solid; border-width: 2px 2px 1px 1px; padding: 5px}
+*/
+.indent1 {padding-left: 10px; }
+.indent2 {padding-left: 50px}
+.aleft {text-align: left}
+.acent {text-align: center}
+.aright {text-align: right}
+.vmid {padding-top: 4px }
+.blk {display: block}
+.imright {
+    vertical-align: middle;
+    position: absolute;
+    right: 10px;
+}
+a.thick {
+	text-decoration:none;
+	font-weight:bold;
+	color:#c00;
+/*	background-color:#ddd; */
+}
+pre {
+	font-size:11px;
+	color:blue;
+	background-color:#ddd;
+}
+.greek {
+	color:#999;
+	background-color:#ddd;
+}
+.mess {
+	font-weight:bold;
+	color:#c00;
+	background-color:#ddd;
+}
+label.small {
+	width: 50em;
+}
+label.medium {
+	width: 110em;
+}
+ol {
+	margin-right:40px;
+}
+/* }li {
+	margin-bottom:10px;
+}*/
+li.nobul {
+	list-style-type: none;
+}
+div.wide {
+	width: 800px;
+}
+span.left {
+	float: left;
+	width: 10%;
+}
+span.right {
+	float: left;
+	width: 90%;
+}
+span.mid {
+	float: left;
+	width: 45%;
+}
+span.left2 {
+	float: left;
+	width: 14%;
+}
+span.right2 {
+	float: left;
+	width: 86%;
+}
+span.left3 {
+	float: left;
+	width: 18%;
+}
+span.right3 {
+	float: left;
+	width: 82%;
+}
+.nobord {
+	border: 0 0 0 0 ;
+}
+.nobordc {
+	border: 0 0 0 0 ;
+	text-align: center ;
+}
+#logo {
+/*  background: url("http://doctool.pythoneer.nl/images/applogo.gif") no-repeat ; */
+  width: 120px;
+  margin:0 0 0 0px;
+  padding: 0 0 0 0;
+  height: 32px;
+  font-size: large;
+  line-height: 1px;
+}
+/*--- nieuwe css menu ---*/
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  }
+/* li {
+  float: left;
+  position: relative; */
+/*  width: 10em; */
+/*  } */
+li.m8 { float: left;
+  position: relative; width: 8% }
+li.m23 { float: left;
+  position: relative; width: 23% }
+li.mnu {padding-left: 1 ;	padding-right: 1 ;	text-align: center ;	text-transform: capitalize ;
+	font-size: 16px;	font-variant: small-caps;	color: #000000 ;	background-color: #f0f0f0 ;}
+li ul {
+  display: none;
+  position: absolute;
+  text-align: left;
+  top: 1em;
+  left: 0; background-color: #f0f0f0; color: black; padding: 0 0 0 0;
+  }
+li ul li { background-color: #f0f0f0;}
+li ul li:hover { background-color: #ccf;}
+li > ul {
+top: auto;
+left: auto;
+}
+li:hover ul, li.over ul{ display: block; }
+.hli { background-color: #ccf;}
+clear: left
+/*-- einde nieuwe css-menu --*/
+.menu0, .menuu, .menug, .menut, .menup {
+	width: 25% ;
+	float: left;
+	padding-left: 1 ;
+	padding-right: 1 ;
+	text-align: center ;
+	text-transform: capitalize ;
+	font-size: 16px;
+	font-variant: small-caps;
+	color: #000000 ;
+	background-color: #f0f0f0 ;
+}
+.menu0 {
+  background-color: transparent ;
+}
+.menuu, .menug, .menut, .menup {
+	font-variant: normal;
+	text-transform: capitalize ;
+}
+.menudiv {
+  width: 792px ;
+  visibility: hidden ;
+	z-index: -1 ;
+}
+.navdiv {
+}
+.menug {
+  visibility: visible ;
+}
+.indt {
+	padding-left: 20px ;
+}
+.big {
+	font-size: x-large ;
+}
+.bhead {
+	font-size: x-large ;
+	font-variant: small-caps;
+}
+.small {
+	font-size: small ;
+}
+.head {
+	font-size: large ;
+	font-variant: small-caps;
+	color:#c00;
+/*	background-color:#ddd; */
+}
+.bold {
+	font-weight:bold;
+/*	color:#000; */
+}
+.headr {
+	font-weight:bold;
+	color:#c00;
+/* background-color:#ddd; */
+}
+.labelt {
+	vertical-align: top;
+}
+td.labelb {
+	font-weight: bold ;
+}
+.underline {
+	text-decoration: underline ;
+	}

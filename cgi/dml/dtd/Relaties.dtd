@@ -1,0 +1,4 @@
+  <!ELEMENT relaties (relatie+)>
+  <!ELEMENT relatie EMPTY>
+  <!ATTLIST attlist vantype CDATA #REQUIRED van CDATA #REQUIRED naartype CDATA #REQUIRED naar CDATA #REQUIRED>
+

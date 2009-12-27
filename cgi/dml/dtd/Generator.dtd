@@ -1,0 +1,21 @@
+  <!ELEMENT generator (titel,doel,invoer,uitvoer,structuur,bijzonder,hoetetesten,testgevallen)>
+  <!ELEMENT titel	(#PCDATA)>
+  <!ELEMENT doel	(regel)>
+  <!ELEMENT invoer	(regel)>
+  <!ELEMENT uitvoer	(regel)>
+  <!ELEMENT structuur (property)>
+  <!ELEMENT bijzonder	(regel,tabel)>
+  <!ELEMENT hoetetesten	(regel,tabel)>
+  <!ELEMENT testgevallen	(regel,tabel)>
+  <!ELEMENT regel (#PCDATA)>
+  <!ATTLIST regel inspring CDATA #IMPLIED bullet CDATA #IMPLIED nummer CDATA #IMPLIED>
+  <!ELEMENT tabel (rij)>
+  <!ELEMENT rij (cel)>
+  <!ELEMENT cel (#PCDATA)>
+  <!ATTLIST cel kolom CDATA #IMPLIED rij CDATA #IMPLIED>
+  <!ELEMENT property (naam,segment,uitvoering,modelnaam)>
+  <!ELEMENT naam (#PCDATA)>
+  <!ELEMENT segment (#PCDATA)>
+  <!ELEMENT uitvoering (#PCDATA)>
+  <!ELEMENT modelnaam (#PCDATA)>
+  <!ATTLIST modelnaam library CDATA #REQUIRED linknaam CDATA #REQUIRED>

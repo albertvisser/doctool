@@ -1,0 +1,6 @@
+  <!ELEMENT index (list+)>
+  <!ELEMENT list  (item+)>
+  <!ATTLIST list  welk CDATA #REQUIRED cat CDATA #REQUIRED>
+  <!ELEMENT item  (naam,oms)>
+  <!ELEMENT naam  (#PCDATA)>
+  <!ELEMENT oms   (#PCDATA)>

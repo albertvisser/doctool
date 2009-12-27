@@ -1,0 +1,11 @@
+<!ELEMENT procedure (titel,doel,invoer,uitvoer,werkwijze,bijzonder,hoetetesten,testgevallen)>
+<!ELEMENT titel	(#PCDATA)>
+<!ELEMENT doel	(#PCDATA)>
+<!ELEMENT invoer	(regel)>
+<!ELEMENT uitvoer	(regel)>
+<!ELEMENT werkwijze	(regel)>
+<!ELEMENT bijzonder	(regel)>
+<!ELEMENT hoetetesten	(regel)>
+<!ELEMENT testgevallen	(regel)>
+<!ELEMENT regel (#PCDATA)>
+

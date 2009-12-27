@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>inputform</title>
+<link type="text/css" href="../style/DocTool.css" rel="stylesheet">
+</head>
+<body>
+<!-- voorlopig geen aparte forms -->
+  <form action="http://doctool.pythoneer.nl/cgi-bin/edit.py">
+  <input type="hidden" name="hWhat" id="hWhat" value="%s"/>
+  <input type="hidden" name="hProj" id="hProj" value="%s"/>
+  <input type="hidden" name="hCat" id="hCat" value="%s"/>
+  <input type="hidden" name="hWhich" id="hWhich" value="%s"/>
+  <table>
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="2"><input type="submit" name="pbKort" id="pbKort" value="Alle wijzigingen opslaan" /></td>
+  </tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Tekst:</td></tr>
+  <tr><td colspan="3"><textarea name="txtTekst" id="txtTekst" rows="30" cols="80" />%s</textarea></td></tr>
+  </table>
+  </form>
+  <a href="#top">Naar het begin van de pagina</a>
+</body>
+</html>

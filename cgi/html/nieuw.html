@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>DocTool Startscherm</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="http://doctool.pythoneer.nl/style/doctool.css" type="text/css" />
+</head>
+<body>
+	<br /><br />
+	<form action="http://doctool.pythoneer.nl/cgi-bin/nieuw.py" >
+ 	  <div><span class="headr">Geef %s voor dit nieuwe document.</span></div>
+	  <input type="hidden" id="hProj" name="hProj" value="%s">
+	  <input type="hidden" id="hCat" name="hCat" value="%s">
+   	  <input type="hidden" id="hWat" name="hWat" value="%s">
+	  <input type="hidden" id="hType" name="hType" value="%s">
+	  <input type="hidden" id="hName" name="hName" value="%s">
+	  <br />
+	  <div style="float: left; width: 100%">
+	    <span class="nw1 vmid">naam:</span>
+	    <span class="nw2"><input type="text" id="txtNaam" name="txtNaam" size="10" value="%s"/></span>
+	  </div>
+	  <div style="float: left; width: 100%">
+	    <span class="nw1 vmid">titel:</span>
+	    <span class="nw2"><input type="text" id="txtOms" name="txtOms" size="80" /></span>
+	  </div>
+	  <div style="float: left; width: 100%"><span class="nw1 vmid">project:</span><span class="nw2 vmid">%s</span></div>
+      <br/><br/><br/><br /><br />
+	  <div style="float: left; width: 100%">
+	    <span class="nw1 vmid">&nbsp;</span>
+	    <span class="nw2">
+          <input type="submit" value="Doorgaan" />
+	      <input type="button" value="Afbreken" onclick="javascript: history.go(-1)" />
+	    </span>
+	  </div>
+	</form>
+</body>
+</html>

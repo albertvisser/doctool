@@ -1,0 +1,9 @@
+<!DOCTYPE projecten [
+  <!ELEMENT projecten (project*)>
+  <!ELEMENT project (kort,start,fysloc,status)>
+  <!ATTLIST project id CDATA #REQUIRED titel CDATA #REQUIRED>
+  <!ELEMENT kort      (#PCDATA)>
+  <!ELEMENT start     (#PCDATA)>
+  <!ELEMENT fysloc    (#PCDATA)>
+  <!ELEMENT status    (#PCDATA)>
+]>

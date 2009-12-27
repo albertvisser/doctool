@@ -1,0 +1,9 @@
+<!ELEMENT gebrtaak  (doel,wanneer,wie,waarvoor,condities,beschrijving)>
+<!ELEMENT doel	    (#PCDATA)>
+<!ELEMENT wanneer   (regel*)>
+<!ELEMENT wie	    (regel*)>
+<!ELEMENT waarvoor  (regel*)>
+<!ELEMENT condities	(regel*)>
+<!ELEMENT beschrijving (regel*)>
+<!ELEMENT regel (#PCDATA)>
+

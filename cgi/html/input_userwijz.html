@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>inputform</title>
+<link type="text/css" href="../style/DocTool.css" rel="stylesheet">
+</head>
+<body>
+<!-- voorlopig geen aparte forms -->
+  <form action="http://doctool.pythoneer.nl/cgi-bin/edit.py">
+  <input type="hidden" name="hWhat" id="hWhat" value="%s"/>
+  <input type="hidden" name="hProj" id="hProj" value="%s"/>
+  <input type="hidden" name="hCat" id="hCat" value="%s"/>
+  <input type="hidden" name="hWhich" id="hWhich" value="%s"/>
+  <table>
+  <tr>
+    <td>Nummer:</td>
+    <td colspan="2"><input type="text" disabled="disabled" name="txtNummer" id="txtNummer" value="%s" size="10" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="2"><input type="submit" name="pbKort" id="pbKort" value="Alle wijzigingen opslaan" /></td>
+  </tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Wens:</td></tr>
+  <tr><td colspan="3"><textarea name="txtWens" id="txtWens" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3">Oplossing:</td></tr>
+  <tr><td colspan="3"><textarea name="txtOplos" id="txtOplos" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3">Functionele aspecten:</td></tr>
+  <tr><td colspan="3"><textarea name="txtFuncA" id="txtFuncA" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3">Technische aspecten:</td></tr>
+  <tr><td colspan="3"><textarea name="txtTechA" id="txtTechA" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3">Realisatie aspecten:</td></tr>
+  <tr><td colspan="3"><textarea name="txtRealA" id="txtRealA" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3">Opmerkingen:</td></tr>
+  <tr><td colspan="3"><textarea name="txtOpmerking" id="txtOpmerking" rows="8" cols="80" />%s</textarea></td></tr>
+  </table>
+  </form>
+  <a href="#top">Naar het begin van de pagina</a>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!ELEMENT entiteit (naam,functie,opbouw,toegang,relatie,levensloop)>
+<!ELEMENT naam (#PCDATA)>
+<!ELEMENT functie (#PCDATA)>
+<!ELEMENT opbouw  (attribuut+)>
+<!ELEMENT attribuut	(omschrijving, bijzonderheden)>
+<!ATTLIST attribuut naam CDATA #REQUIRED type CDATA #REQUIRED>
+<!ELEMENT omschrijving (#PCDATA)>
+<!ELEMENT bijzonderheden (#PCDATA)>
+<!ELEMENT toegang (EMPTY)>
+<!ATTLIST toegang naam CDATA #REQUIRED volgorde CDATA #REQUIRED>
+<!ELEMENT relatie (EMPTY)>
+<!ATTLIST relatie naam CDATA #REQUIRED entiteit CDATA #REQUIRED)>
+<!ELEMENT levensloop (regel*)>
+<!ELEMENT regel (#PCDATA)>
+

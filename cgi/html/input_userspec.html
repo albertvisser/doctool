@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>inputform</title>
+<link type="text/css" href="../style/DocTool.css" rel="stylesheet">
+</head>
+<body>
+<!-- voorlopig geen aparte forms -->
+  <form action="http://doctool.pythoneer.nl/cgi-bin/edit.py">
+  <input type="hidden" name="hWhat" id="hWhat" value="%s"/>
+  <input type="hidden" name="hProj" id="hProj" value="%s"/>
+  <input type="hidden" name="hCat" id="hCat" value="%s"/>
+  <input type="hidden" name="hWhich" id="hWhich" value="%s"/>
+  <table>
+  <tr>
+    <td>Titel:</td>
+    <td colspan="2"><input type="text" name="txtKort" id="txtKort" value="%s" size="80" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="2"><input type="submit" name="pbKort" id="pbKort" value="Alle wijzigingen opslaan" /></td>
+  </tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Gewenste functionaliteit:</td></tr>
+  <tr><td colspan="3"><textarea name="txtFunc" id="txtFunc" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Gewenste vormgeving:</td></tr>
+  <tr><td colspan="3"><textarea name="txtBeeld" id="txtBeeld" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Gewenst(e) uitvoerproduct(en) (indien van toepassing):</td></tr>
+  <tr><td colspan="3"><textarea name="txtProduct" id="txtProduct" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3" style="font-weight: bold">Randvoorwaarden:</td></tr>
+  <tr><td colspan="2">Wat moet het opleveren:</td><td><input type="text" name="txtBaten" id="txtBaten" value="%s" size="80" /></td></tr>
+  <tr><td colspan="2">Wat mag het kosten:</td><td><input type="text" name="txtKosten" id="txtKosten" value="%s" size="80" /></td></tr>
+  <tr><td colspan="3">Overige zaken:</td></tr>
+  <tr><td colspan="3"><textarea name="txtOmg" id="txtOmg" rows="8" cols="80" />%s</textarea></td></tr>
+  </table>
+  </form>
+  <a href="#top">Naar het begin van de pagina</a>
+</body>
+</html>

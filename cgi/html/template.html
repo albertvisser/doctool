@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>DocTool %s</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="http://doctool.pythoneer.nl/style/doctool.css" type="text/css" />
+    <script type="text/javascript">
+    <!--
+startList = function(){
+ if (document.all&&document.getElementById) {
+  navRoot = document.getElementById("nav");
+  for (i=0; i<navRoot.childNodes.length; i++) {
+   node = navRoot.childNodes[i];
+   if (node.nodeName=="LI") {
+    node.onmouseover=function() {
+     this.className+=" over"; }
+    node.onmouseout=function() {
+     this.className=this.className.replace(" over", ""); }
+    for (j=0; j<node.childNodes.length; j++) {
+     n2 = node.childNodes[j];
+     if (n2.nodeName=="UL")             {
+      for (k=0; k<n2.childNodes.length; k++) {
+       n3 = n2.childNodes[k];
+       if (n3.nodeName=="LI") {
+        n3.onmouseover=function() {
+         this.className+=" hli"; }
+        n3.onmouseout=function() {
+         this.className=this.className.replace(" hli", ""); } } } } } } } } }
+window.onload=startList;
+    -->
+    </script>
+    <script type="text/javascript">
+    <!--
+function selectproj()
+{
+    document.getElementById('subThis').disabled=false;
+}
+    -->
+    </script>
+</head>
+<body>
+  <a name="top">&nbsp;</a>
+  <div style="width: 100%">
+	<span class="kw1">
+	  <span class="small">
+        <a href="http://www.python.org/">
+          <img src="http://www.pythoneer.nl/images/PythonPoweredSmall.gif" alt="[Python Powered]" title="Click to visit Python homepage" border="0" />
+        </a>
+	    DocTool V0.11<br />(c) 2003 Albert Visser<br />
+      </span>
+	</span>
+	<span class="kw3">
+	  <span class="big">
+<!-- titel -->
+	  </span>
+	  <img align="right" src="http://doctool.pythoneer.nl/images/applogo.gif" alt="uw applicatielogo hier" title="uw applicatielogo hier" border="0" />
+	</span>
+  </div>
+  <a name="menu">&nbsp;</a><div style="width: 100%">$$  </div>
+  <br/><br/>
+  <div style="width: 100%">
+  <span class="full">&nbsp;</span>
+  <a name="begin"></a>$$<span class="kw1">&nbsp;</span>$$  <span class="%s">
+  <iframe src="http://%s" style="width: 100%; height: 600px; overflow: auto"/>
+  <a name="eind"></a>$$</span>
+  </div>
+</body>
+</html>

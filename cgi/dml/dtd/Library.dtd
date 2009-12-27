@@ -1,0 +1,18 @@
+  <!ELEMENT library (titel,model)>
+  <!ELEMENT titel	(#PCDATA)>
+  <!ELEMENT model (naam,doel,invoer,uitvoer,werkwijze,bijzonder,hoetetesten,testgevallen)>
+  <!ELEMENT naam (#PCDATA)>
+  <!ATTLIST naam linknaam CDATA #REQUIRED>
+  <!ELEMENT doel	(regel)>
+  <!ELEMENT invoer	(regel)>
+  <!ELEMENT uitvoer	(regel)>
+  <!ELEMENT werkwijze	(regel,tabel)>
+  <!ELEMENT bijzonder	(regel,tabel)>
+  <!ELEMENT hoetetesten	(regel,tabel)>
+  <!ELEMENT testgevallen	(regel,tabel)>
+  <!ELEMENT regel (#PCDATA)>
+  <!ATTLIST regel inspring CDATA #IMPLIED bullet CDATA #IMPLIED nummer CDATA #IMPLIED>
+  <!ELEMENT tabel (rij)>
+  <!ELEMENT rij (cel)>
+  <!ELEMENT cel (#PCDATA)>
+  <!ATTLIST cel kolom CDATA #IMPLIED rij CDATA #IMPLIED>

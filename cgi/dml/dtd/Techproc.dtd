@@ -1,0 +1,7 @@
+<!ELEMENT techproc (kort,doel,periode, verloop)>
+<!ELEMENT kort	(#PCDATA)>
+<!ELEMENT doel	(regel)>
+<!ELEMENT periode	(regel)>
+<!ELEMENT verloop	(regel)>
+<!ELEMENT regel (#PCDATA)>
+

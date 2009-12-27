@@ -1,0 +1,7 @@
+<!ELEMENT funcproc (doel,invoer,uitvoer,beschrijving)>
+<!ELEMENT doel	(#PCDATA)>
+<!ELEMENT invoer	(regel*)>
+<!ELEMENT uitvoer	(regel*)>
+<!ELEMENT beschrijving	(regel*)>
+<!ELEMENT regel (#PCDATA)>
+

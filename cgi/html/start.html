@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>DocTool Startscherm</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="http://doctool.pythoneer.nl/style/doctool.css" type="text/css" />
+</head>
+<body>
+  <span class="full">&nbsp;</span>
+  <form action="http://%sshow.py" method="POST" />
+    <span class="kw1 aright">Selecteer een project:&nbsp;</span>
+    <span class="kw3">
+	<select name="proj" id="proj" size="10">
+	    <option value="%s">%s</option>
+	</select>
+    </span>
+    <span class="kw1 aright">&nbsp;</span>
+    <span class="kw3">
+      <input type="hidden" id="type" name="type" value="list" />
+      <input type="hidden" id="what" name="what" value="start" />
+      <input type="submit" value="Ga naar het startmenu ervan" />
+    &nbsp;</span>
+  </form>
+  <span class="full">&nbsp;</span>
+  <span class="full">&nbsp;</span>
+    <span class="kw1 aright">Of ga naar de&nbsp;</span>
+    <span class="kw3">
+      <a target="_top" class="thick" href="http://%sshow.py?type=list&amp;what=%s&amp;proj=%s&amp;cat=%s">%s</a>
+      &nbsp;voor alle projecten</span>
+</body>
+</html>
+
