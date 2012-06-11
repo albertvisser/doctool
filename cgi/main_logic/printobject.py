@@ -1,11 +1,14 @@
-from doctool_globals import *
-from os.path import exists
+import os
+import common
+import docobj
+from relaties import Relaties
+from docitems import ItemList, laatste_wijz
 
-def selector(proj,marge=True,size=0,form=True):
+def selector(proj, marge=True, size=0, form=True):
     s_proj = str(proj)
     r = []
     if form:
-        r.append('  <form action="%sshow.py" method="post">' % cgipad)
+        r.append('  <form action="%sshow.py" method="post">' % common.cgipad)
     if marge:
         h = ""
         if size > 1:
@@ -22,10 +25,9 @@ def selector(proj,marge=True,size=0,form=True):
     r.append('    <select name="proj" id="proj"%s>' % h)
     h = '      <option %s value="%s">%s</option>'
     rd = h.split("%s")
-    from docitems import ItemList
     i = ItemList("project")
     #~ i.read() #- zit al in __init__
-    for x in i.Items:
+    for x in i.items:
         if x[0] == "0":
             continue
         sl = ""
@@ -51,7 +53,7 @@ def selector(proj,marge=True,size=0,form=True):
         r.append('  </form>')
     return r
 
-class printHTMLObject:
+class PrintHTMLObject:
     "gebruikt bij start, nieuw of wijzigstand"
     def __init__(self,caller):
         self.soort = caller.soort
@@ -68,22 +70,22 @@ class printHTMLObject:
                 self.lines = selector(0,True,10)
             else:
                 self.lines = selector(self.proj)
-                from project import Project
-                self.printh = Project(self.proj)
+                self.printh = docobj.Project(self.proj)
                 self.printh.read()
         elif self.welk == "nieuw":
             self.lines = [] # geen selector(self.proj)
         else:
-            printh = printXMLObject(caller)
+            printh = PrintXMLObject(caller)
             self.lines = []
         overslaan = True
         for y in regels:
-            h = y[:-1]
+            h = y.rstrip()
             if overslaan:
-                if h == "<body>": overslaan = False
-            elif h == "</body>":
+                if "<body>" in h:
+                    overslaan = False
+            elif "</body>" in h:
                 overslaan = True
-            elif h.find("%s") >= 0:
+            elif "%s" in h:
                 if self.wat == "start":
                     self.verwerk_start(h)
                 elif self.welk == "nieuw":
@@ -95,38 +97,40 @@ class printHTMLObject:
                         s = r[0]
                     else:
                         s = "\n".join(r)
-                    self.lines.append("%s%s%s"% (rd[0], s, rd[1]))
+                    self.lines.append(h % s)
             else:
                 self.lines.append(h)
 
     def verwerk_start(self,h):
         "%s regels voor een start scherm"
         if h.find("stylesheet") > -1:
-            self.lines.append(h % stylepad)
+            self.lines.append(h % common.stylepad)
         elif self.proj == "0":
             z = "user"
             y = "wijz"
             c = z + "_" + y
             #~ self.lines.append('  <span class="indent1">')
             try:
-                self.lines.append(h % (cgipad,z,"0",y,titel_menu[c]))
+                self.lines.append(h % (common.cgipad, z, "0", y,
+                    common.titel_menu[c]))
             except:
-                self.lines.append(h % cgipad)
+                self.lines.append(h % common.cgipad)
         else:
             if h.find("Naam") > -1:
-                self.lines.append(h % self.printh.Naam)
+                ## self.lines.append(h % self.printh.naam) # staat al in de selector
+                pass
             elif h.find("Kort") > -1:
-                self.lines.append(h % self.printh.Kort)
+                self.lines.append(h % self.printh.kort)
             elif h.find("Oms") > -1:
                 #~ self.lines.append(h % "".join(self.printh.Oms))
-                self.lines.append(h % self.printh.Oms)
+                self.lines.append(h % self.printh.oms)
             elif h.find("start") > -1:
-                self.lines.append(h % self.printh.Start)
+                self.lines.append(h % self.printh.start)
             elif h.find("Fysiek") > -1:
-                self.lines.append(h % self.printh.Fysloc)
+                self.lines.append(h % self.printh.fysloc)
             elif h.find("Voortgang") > -1:
                 #~ self.lines.append(h % "".join(self.printh.Status))
-                self.lines.append(h % self.printh.Status)
+                self.lines.append(h % self.printh.status)
 
     def verwerk_nieuw(self,h):
         rd = h.split("%s")
@@ -149,26 +153,25 @@ class printHTMLObject:
                 s = 'een naam en een titel op'
         elif h.find("txtNaam") >= 0:
             if self.wat == "user" and self.cat == "wijz":
-                from docitems import LaatsteWijz
-                dh = LaatsteWijz()
-                hh = h.split("><")
-                s = (hh[1].replace("text","hidden") % dh.nieuwetitel)
-                self.lines.append("%s>%s<%s><%s" % (hh[0].replace("nw2","nw2 vmid"),dh.nieuwetitel,s,hh[2]))
+                num, nieuwetitel = laatste_wijz()
+                deel1, deel2, deel3 = h.split("><")
+                s = deel2.replace("text","hidden") % nieuwetitel
+                self.lines.append("%s>%s<%s><%s" % (deel1.replace("nw2",
+                    "nw2 vmid"), nieuwetitel, s, deel3))
             else:
                 self.lines.append(h % s)
             s = ''
-        elif h.find("project") >= 0 and self.wat == "user" and self.cat == "wijz":
+        elif "project" in h and self.wat == "user" and self.cat == "wijz":
             if self.proj == "0":
-                s = '\n'.join(selector(0,marge=False,size=1,form=False))
+                s = '\n'.join(selector(0, marge=False, size=1, form=False))
             else:
-                from project import Project
-                p = Project(self.proj)
+                p = docobj.Project(self.proj)
                 p.read()
-                s = p.Naam + " - " + p.Kort
+                s = str(p) # p.naam + " - " + p.kort
         if s != '':
             self.lines.append(s.join(rd))
 
-class printXMLObject:
+class PrintXMLObject:
     def __init__(self,caller):
         self.soort = caller.soort
         self.wat = caller.wat
@@ -185,89 +188,83 @@ class printXMLObject:
 
     def leesitem(self): # versie 2: opgenomen in itemlist.py
         if self.wat == 'project':
-            from project import Project
-            self.dh = Project(self.proj)
+            self.dh = docobj.Project(self.proj)
         elif self.zoek == 'user_spec':
-            from userspec import Userspec
-            self.dh = Userspec(self.welk)
+            self.dh = docobj.Userspec(self.welk)
         elif self.zoek == 'user_docs':
-            from userdocs import UserDoc
-            self.dh = UserDoc(self.welk)
+            self.dh = docobj.UserDoc(self.welk)
         elif self.zoek == 'user_wijz':
-            from userwijz import Userwijz
-            self.dh = Userwijz(self.welk)
+            self.dh = docobj.Userwijz(self.welk)
         elif self.zoek == 'func_docs':
-            from funcdocs import FuncDoc
-            self.dh = FuncDoc(self.welk)
+            self.dh = docobj.FuncDoc(self.welk)
         elif self.zoek == 'func_task':
-            from functask import Functask
-            self.dh = Functask(self.welk)
+            self.dh = docobj.Functask(self.welk)
         elif self.zoek == 'func_proc':
-            from funcproc import Funcproc
-            self.dh = Funcproc(self.welk)
+            self.dh = docobj.Funcproc(self.welk)
         elif self.zoek == 'func_data':
-            from funcdata import Entiteit
-            self.dh = Entiteit(self.welk)
+            self.dh = docobj.Entiteit(self.welk)
         elif self.zoek == 'tech_proc':
-            from techproc import Techproc
-            self.dh = Techproc(self.welk)
+            self.dh = docobj.Techproc(self.welk)
         elif self.zoek == 'tech_task':
-            from techtask import Techtask
-            self.dh = Techtask(self.welk)
+            self.dh = docobj.Techtask(self.welk)
         elif self.zoek == 'tech_data':
-            from techdata import Techdata
-            self.dh = Techdata(self.welk)
+            self.dh = docobj.Techdata(self.welk)
         elif self.zoek == 'proc_proc':
-            from procproc import Procproc
-            self.dh = Procproc(self.welk)
+            self.dh = docobj.Procproc(self.welk)
         else:
             self.ok = False
         if self.ok:
             self.dh.read()
             if self.wat != 'project':
-                from relaties import Relaties
-                self.rh = Relaties(self.wat + self.cat,self.welk)
+                self.rh = Relaties(self.wat + self.cat, self.welk)
                 if self.rh.exists:
                     self.rh.read()
 
     def leeslist(self):
-        marge=False
+        marge = False
         lijst = selector(self.proj,marge)
         zoek = self.wat + self.cat
-        from docitems import ItemList
         di = ItemList("project")
         #~ di.read() #- zit al in __init__
-        dh = ItemList(zoek,self.proj)
+        dh = ItemList(zoek, self.proj)
         if dh.exists:
             #~ dh.read() #- zit al in __init__
-            pad = cgipad + "show.py"
-            if dh.aantItems > 0:
-                for x in range(dh.aantItems):
-                    y = dh.Items[x]
+            pad = common.cgipad + "show.py"
+            if dh.aant_items > 0:
+                for x in range(dh.aant_items):
+                    y = dh.items[x]
                     if self.proj == "0":
-                        z = di.Items[int(y[0])]
-                        lijst.append('   <a target="_top" href="%s?type=item&amp;what=%s&amp;proj=%s&amp;cat=%s&amp;which=%s">%s: %s (%s)</a><br />'
-                        % (pad,self.wat,y[0],self.cat,y[1],y[1],y[2],z[1]))
+                        z = di.items[int(y[0])]
+                        lijst.append('   <a target="_top" href="%s?type=item&amp;'
+                            'what=%s&amp;proj=%s&amp;cat=%s&amp;which=%s">%s: %s ('
+                            '%s)</a><br />' % (pad, self.wat, y[0], self.cat, y[1],
+                            y[1], y[2], z[1]))
                     else:
-                        lijst.append('   <a target="_top" href="%s?type=item&amp;what=%s&amp;proj=%s&amp;cat=%s&amp;which=%s">%s: %s</a><br />'
-                        % (pad,self.wat,self.proj,self.cat,y[0],y[0],y[1]))
+                        lijst.append('   <a target="_top" href="%s?type=item&amp;'
+                            'what=%s&amp;proj=%s&amp;cat=%s&amp;which=%s">%s: %s'
+                            '</a><br />' % (pad, self.wat, self.proj, self.cat,
+                            y[0], y[0], y[1]))
             else:
-                lijst.append('Nog geen %s%ss gevonden voor dit project' % (self.wat,self.cat))
+                lijst.append('Nog geen %s%ss gevonden voor dit project' % (self.wat,
+                    self.cat))
         else:
-            lijst.append('Geen Itemlist gevonden voor %s%s bij project %s<br />' % (self.wat,self.cat,self.proj))
+            lijst.append('Geen Itemlist gevonden voor %s%s bij project %s<br />' % (
+                self.wat, self.cat, self.proj))
         return lijst
 
     def toonitem(self):
         self.rgl = []
         if  self.wat == "list":
             self.rgl= selector(self.proj)
-        s = self.maakHtml(self.dh)
+        s = self.maak_html(self.dh)
         for x in s:
             if self.zoek == 'func_data':
-                if x[:27] == '<-- sleutel verwijst naar ':
+                if x.startswith('<-- sleutel verwijst naar '):
                     xx = x[:27]
                     xy = x[28:-1]
-                    self.rgl.append('%s<a href="%sshow.py?type=item&amp;what=func&amp;proj=%s&amp;cat=data&amp;which=%s">%s</a>' % (xx,cgipad,self.proj,xy,xy))
+                    self.rgl.append('%s<a href="%sshow.py?type=item&amp;what=func'
+                        '&amp;proj=%s&amp;cat=data&amp;which=%s">%s</a>' % (xx,
+                        cgipad, self.proj, xy, xy))
                 else:
                     self.rgl.append(x)
             else:
@@ -275,180 +272,189 @@ class printXMLObject:
         if self.wat == "project":
             s = []
         else:
-            s = self.maakHtml(self.rh)
+            s = self.maak_html(self.rh)
         for x in s:
             self.rgl.append(x)
         self.rgl.append('<br/>')
         if self.zoek == "user_spec":
-            self.addKnop("pbNewFD","Opvoeren algemeen document","func","docs")
+            self.add_knop("pbNewFD","Opvoeren algemeen document","func","docs")
         elif self.zoek == "user_docs":
             pass
         elif self.zoek == "user_wijz":
             pass
         elif self.zoek == "func_docs":
-            self.addKnop("pbNewFT","Opvoeren gebruikerstaak","func","task")
-            self.addKnop("pbNewFP","Opvoeren functioneel proces","func","proc")
+            self.add_knop("pbNewFT","Opvoeren gebruikerstaak","func","task")
+            self.add_knop("pbNewFP","Opvoeren functioneel proces","func","proc")
         elif self.zoek == "func_task":
-            self.addKnop("pbNewFP","Opvoeren functioneel proces","func","proc")
-            self.addKnop("pbNewTT","Opvoeren job/transactie","tech","task")
+            self.add_knop("pbNewFP","Opvoeren functioneel proces","func","proc")
+            self.add_knop("pbNewTT","Opvoeren job/transactie","tech","task")
         elif self.zoek == "func_proc":
-            self.addKnop("pbNewFP","Opvoeren functioneel (sub)proces","func","proc")
-            self.addKnop("pbNewFD","Opvoeren funct. databeschrijving","func","data")
-            self.addKnop("pbNewTP","Opvoeren technisch proces","tech","proc")
+            self.add_knop("pbNewFP","Opvoeren functioneel (sub)proces","func","proc")
+            self.add_knop("pbNewFD","Opvoeren funct. databeschrijving","func","data")
+            self.add_knop("pbNewTP","Opvoeren technisch proces","tech","proc")
         elif self.zoek == "func_data":
-            self.addKnop("pbNewTD","Opvoeren techn. databeschrijving","tech","data")
+            self.add_knop("pbNewTD","Opvoeren techn. databeschrijving","tech","data")
         elif self.zoek == "tech_task":
-            self.addKnop("pbNewTP","Opvoeren technisch proces","tech","proc")
+            self.add_knop("pbNewTP","Opvoeren technisch proces","tech","proc")
         elif self.zoek == "tech_proc":
-            self.addKnop("pbNewTP","Opvoeren technisch (sub)proces","tech","proc")
-            self.addKnop("pbNewTD","Opvoeren techn. databeschrijving","tech","data")
-            self.addKnop("pbNewPP","Opvoeren programmabeschrijving","proc","proc")
+            self.add_knop("pbNewTP","Opvoeren technisch (sub)proces","tech","proc")
+            self.add_knop("pbNewTD","Opvoeren techn. databeschrijving","tech","data")
+            self.add_knop("pbNewPP","Opvoeren programmabeschrijving","proc","proc")
         elif self.zoek == "tech_data":
             pass
         elif self.zoek == "proc_proc":
             pass
         return self.rgl
 
-    def addKnop(self,h1,h2,h3,h4):
+    def add_knop(self, h1, h2, h3, h4):
         zoek = "".join(self.zoek.split("_"))
         knop = '<input type="button" name="%s" id="%s" value="%s" onclick="%s" />'
-        onclick = "javascript:document.location='%sshow.py?type=item&amp;which=%s&amp;cat=%s&amp;what=nieuw&amp;vtype=%s&amp;vnaam=%s'\n"
-        h5 = (onclick % (cgipad,h3,h4,zoek,self.wat))
-        self.rgl.append(knop % (h1,h1,h2,h5))
+        h5 = ("javascript:document.location='%sshow.py?type=item&amp;which=%s&amp;"
+            "cat=%s&amp;what=nieuw&amp;vtype=%s&amp;vnaam=%s'\n" % (common.cgipad,
+            h3, h4, zoek, self.wat))
+        self.rgl.append(knop % (h1, h1, h2, h5))
 
-    def maakHtml(self,o):
+    def maak_html(self, obj):
         s = []
         # bepaal om te beginnen het type van het object
-        h = o.__class__.__name__
+        h = obj.__class__.__name__
         if h == "Project":
-            s.append('<br /><div><span class="headr">Naam Project:</span> %s</div>' % o.Naam)
-            s.append('<hr /><div class="headr">Omschrijving: </div><p>%s</p>' % o.Kort)
-            s.append('<br /><div><span class="headr">Opstarten met:</span> %s</div>' % o.Start)
-            s.append('<br /><div><span class="headr">Fysieke locatie</span> %s</div>' % o.Fysloc)
-            s.append('<hr /><div class="headr">Opmerkingen: </div><p>%s</p>' % o.Status)
+            s.append('<br /><div><span class="headr">Naam Project:</span> %s</div>'
+                % obj.naam)
+            s.append('<hr /><div class="headr">Omschrijving: </div><p>%s</p>'
+                % obj.kort)
+            s.append('<br /><div><span class="headr">Opstarten met:</span> %s</div>'
+                % obj.start)
+            s.append('<br /><div><span class="headr">Fysieke locatie</span> %s</div>'
+                % obj.fysloc)
+            s.append('<hr /><div class="headr">Opmerkingen: </div><p>%s</p>'
+                % obj.status)
         elif h == "Userspec":
-            s.append('<br /><div><span class="headr">Korte omschrijving:</span> %s</div>' % o.Kort)
-            if len(o.Functie) > 0:
+            s.append('<br /><div><span class="headr">Korte omschrijving:</span> %s'
+                '</div>' % obj.kort)
+            if len(obj.functie) > 0:
                 s.append('<hr /><div class="headr">Gewenste functionaliteit: </div>')
-                for x in o.Functie:
+                for x in obj.functie:
                     s.append('<p>%s</p>' % x)
-            if len(o.Beeld) > 0:
+            if len(obj.beeld) > 0:
                 s.append('<hr /><div class="headr">Gewenste vormgeving: </div>')
-                for x in o.Beeld:
+                for x in obj.beeld:
                     s.append('<p>%s</p>' % x)
-            if len(o.Product) > 0:
+            if len(obj.product) > 0:
                 s.append('<hr /><div class="headr">Gewenst(e) uitvoerproduct(en): </div>')
-                for x in o.Product:
+                for x in obj.product:
                     s.append('<p>%s</p>' % x)
-            if len(o.Omgeving) > 0:
-                s.append('<hr /><div class="headr">Randvoorwaarden: </div>')
-                s.append('<div><span class="underline">Wat moet het opleveren:</span>&nbsp;%s</div>' % o.Omgeving[0])
-                s.append('<div><span class="underline">Wat mag het kosten:</span>&nbsp;%s</div>' % o.Omgeving[1])
-                for x in range(2,len(o.Omgeving)):
-                    s.append('<p>%s</p>' % o.Omgeving[x])
+            s.append('<hr /><div class="headr">Randvoorwaarden: </div>')
+            s.append('<div><span class="underline">Wat moet het opleveren:'
+                '</span>&nbsp;%s</div>' % obj.kosten)
+            s.append('<div><span class="underline">Wat mag het kosten:</span>'
+                '&nbsp;%s</div>' % obj.baten)
+            if len(obj.omgeving) > 0:
+                for x in obj.omgeving:
+                    s.append('<p>%s</p>' % x)
         elif h == "UserDoc":
-            s.append('<br /><div><span class="headr">Zie:</span> %s</div>' % o.Link)
+            s.append('<br /><div><span class="headr">Zie:</span> %s</div>' % obj.link)
             s.append('<p>')
-            if len(o.Tekst) > 0:
-                for x in o.Tekst:
+            if len(obj.tekst) > 0:
+                for x in obj.tekst:
                     s.append('%s<br/>' % x)
             s.append('</p>')
         elif h == "Userwijz":
-            s.append('<br /><div><span class="headr">Wens:</span> %s</div>' % o.Wens)
+            s.append('<br /><div><span class="headr">Wens:</span> %s</div>' % obj.wens)
             s.append('<hr /><div class="headr">Oplossing: </div>')
-            if len(o.Oplossing) > 0:
-                for x in o.Oplossing:
+            if len(obj.oplossing) > 0:
+                for x in obj.oplossing:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Functionele aspecten: </div>')
-            if len(o.FuncAanv) > 0:
-                for x in o.FuncAanv:
+            if len(obj.funcaanv) > 0:
+                for x in obj.funcaanv:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Technische aspecten: </div>')
-            if len(o.TechAanv) > 0:
-                for x in o.TechAanv:
+            if len(obj.techaanv) > 0:
+                for x in obj.techaanv:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Realisatie aspecten: </div>')
-            if len(o.Realisatie) > 0:
-                for x in o.Realisatie:
+            if len(obj.realisatie) > 0:
+                for x in obj.realisatie:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Opmerkingen: </div>')
-            if len(o.Opmerkingen) > 0:
-                for x in o.Opmerkingen:
+            if len(obj.opmerkingen) > 0:
+                for x in obj.opmerkingen:
                     s.append('<p>%s</p>' % x)
         elif h == "FuncDoc":
             s.append('<p>')
-            if len(o.Tekst) > 0:
-                for x in o.Tekst:
+            if len(obj.tekst) > 0:
+                for x in obj.tekst:
                     s.append('%s<br/>' % x)
             s.append('</p>')
         elif h == "Funcproc":
-            s.append('<br /><div><span class="headr">Doel:</span> %s</div>' % o.Doel)
+            s.append('<br /><div><span class="headr">Doel:</span> %s</div>' % obj.doel)
             s.append('<hr /><div class="headr">Wanneer/hoe vaak uitvoeren: </div>')
-            if len(o.Wanneer) > 0:
-                for x in o.Wanneer:
+            if len(obj.wanneer) > 0:
+                for x in obj.wanneer:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Wie mag/moet dit uitvoeren: </div>')
-            if len(o.Wie) > 0:
-                for x in o.Wie:
+            if len(obj.wie) > 0:
+                for x in obj.wie:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Waarvoor dient het uitvoeren: </div>')
-            if len(o.Waarvoor) > 0:
-                for x in o.Waarvoor:
+            if len(obj.waarvoor) > 0:
+                for x in obj.waarvoor:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Uitgangssituatie: </div>')
-            if len(o.Invoer) > 0:
-                for x in o.Invoer:
+            if len(obj.invoer) > 0:
+                for x in obj.invoer:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Onder welke condities: </div>')
-            if len(o.Condities) > 0:
-                for x in o.Condities:
+            if len(obj.condities) > 0:
+                for x in obj.condities:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Resultaatsituatie: </div>')
-            if len(o.Uitvoer) > 0:
-                for x in o.Uitvoer:
+            if len(obj.uitvoer) > 0:
+                for x in obj.uitvoer:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Beschrijving: </div>')
-            if len(o.Beschrijving) > 0:
-                for x in o.Beschrijving:
+            if len(obj.beschrijving) > 0:
+                for x in obj.beschrijving:
                     s.append('<p>%s</p>' % x)
         elif h == "Functask":
-            s.append('<br /><div><span class="headr">Doel:</span> %s</div>' % o.Doel)
+            s.append('<br /><div><span class="headr">Doel:</span> %s</div>' % obj.doel)
             s.append('<hr /><div class="headr">Wanneer/hoe vaak uitvoeren: </div>')
-            if len(o.Wanneer) > 0:
-                for x in o.Wanneer:
+            if len(obj.wanneer) > 0:
+                for x in obj.wanneer:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Wie mag/moet dit uitvoeren: </div>')
-            if len(o.Wie) > 0:
-                for x in o.Wie:
+            if len(obj.wie) > 0:
+                for x in obj.wie:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Waarvoor dient het uitvoeren: </div>')
-            if len(o.Waarvoor) > 0:
-                for x in o.Waarvoor:
+            if len(obj.waarvoor) > 0:
+                for x in obj.waarvoor:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Onder welke condities: </div>')
-            if len(o.Condities) > 0:
-                for x in o.Condities:
+            if len(obj.condities) > 0:
+                for x in obj.condities:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Beschrijving: </div>')
-            if len(o.Beschrijving) > 0:
-                for x in o.Beschrijving:
+            if len(obj.beschrijving) > 0:
+                for x in obj.beschrijving:
                     s.append('<p>%s</p>' % x)
         elif h == "Entiteit":
-            s.append('<br /><div><span class="headr">Entiteit naam:</span> %s</div>' % o.Naam)
-            s.append('<hr /><div><span class="headr">Functie:</span> %s</div>' % o.Functie)
+            s.append('<br /><div><span class="headr">Entiteit naam:</span> %s</div>' % obj.naam)
+            s.append('<hr /><div><span class="headr">Functie:</span> %s</div>' % obj.functie)
             s.append('<hr /><div class="headr">Attributen: </div>')
             s.append('<div class="indt">')
-            if len(o.Attribuut) > 0:
-                for x in o.Attribuut:
+            if len(obj.attribuut) > 0:
+                for x in obj.attribuut:
                     h = ""
-                    for y in o.Toegang.keys():
+                    for y in obj.toegang.keys():
                         if y == x[0]:
-                            h = ("<-- identificerende sleutel (%s)" % o.Toegang[y])
+                            h = ("<-- identificerende sleutel (%s)" % obj.toegang[y])
                             break
                     if h == "":
-                        for y in o.Relatie.keys():
+                        for y in obj.relatie.keys():
                             if y == x[0]:
-                                h = ('<-- sleutel verwijst naar (%s)' % o.Relatie[y])
+                                h = ('<-- sleutel verwijst naar (%s)' % obj.relatie[y])
                                 break
                     s.append('<span class="underline">naam:</span> %s %s<br />' % (x[0],h))
                     s.append('<span class="underline">type:</span> %s<br />' % x[1])
@@ -457,98 +463,116 @@ class printXMLObject:
                     s.append('<br />')
             s.append('</div>' )
             s.append('<hr /><div class="headr">Levenscyclus: </div>')
-            if len(o.Levensloop) > 0:
-                for x in o.Levensloop:
+            if len(obj.levensloop) > 0:
+                for x in obj.levensloop:
                     s.append('<p>%s</p>' % x)
         elif h == "Techproc":
-            s.append('<br /><div><span class="headr">Titel:</span> %s</div>' % o.Titel)
-            s.append('<br /><div><span class="headr">Doel:</span> %s</div>' % o.Doel)
+            s.append('<br /><div><span class="headr">Titel:</span> %s</div>' % obj.titel)
+            s.append('<br /><div><span class="headr">Doel:</span> %s</div>' % obj.doel)
             s.append('<hr /><div class="headr">Uitgangssituatie: </div>')
-            if len(o.Invoer) > 0:
-                for x in o.Invoer:
+            if len(obj.invoer) > 0:
+                for x in obj.invoer:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Resultaatsituatie: </div>')
-            if len(o.Uitvoer) > 0:
-                for x in o.Uitvoer:
+            if len(obj.uitvoer) > 0:
+                for x in obj.uitvoer:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Beschrijving: </div>')
-            if len(o.Beschrijving) > 0:
-                for x in o.Beschrijving:
+            if len(obj.beschrijving) > 0:
+                for x in obj.beschrijving:
                     s.append('<p>%s</p>' % x)
         elif h == "Techtask":
-            s.append('<br /><div><span class="headr">Korte beschrijving:</span> %s</div>' % o.Kort)
+            s.append('<br /><div><span class="headr">Korte beschrijving:</span> %s'
+                '</div>' % obj.kort)
             s.append('<br /><div class="headr">Doel: </div>')
-            if len(o.Doel) > 0:
-                for x in o.Doel:
+            if len(obj.doel) > 0:
+                for x in obj.doel:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Periodiciteit: </div>')
-            if len(o.Periode) > 0:
-                for x in o.Periode:
+            if len(obj.periode) > 0:
+                for x in obj.periode:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Verloop: </div>')
-            if len(o.Verloop) > 0:
-                for x in o.Verloop:
+            if len(obj.verloop) > 0:
+                for x in obj.verloop:
                     s.append('<p>%s</p>' % x)
         elif h == "Record": #Techdata
             pass
         elif h == "Procproc":
-            s.append('<br /><div><span class="headr">Titel:</span> %s</div>' % o.Titel)
-            s.append('<br /><div><span class="headr">Doel:</span> %s</div>' % o.Doel)
-            s.append('<hr /><div class="headr">Invoersituatie (o.a. argumenten bij aanroep): </div>')
-            if len(o.Invoer) > 0:
-                for x in o.Invoer:
+            s.append('<br /><div><span class="headr">Titel:</span> %s</div>' % obj.titel)
+            s.append('<br /><div><span class="headr">Doel:</span> %s</div>' % obj.doel)
+            s.append('<hr /><div class="headr">Invoersituatie (obj.a. argumenten bij aanroep): </div>')
+            if len(obj.invoer) > 0:
+                for x in obj.invoer:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Uitvoersituatie (incl. foutmeldingen): </div>')
-            if len(o.Uitvoer) > 0:
-                for x in o.Uitvoer:
+            if len(obj.uitvoer) > 0:
+                for x in obj.uitvoer:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Werkwijze: </div>')
-            if len(o.Werkwijze) > 0:
-                for x in o.Werkwijze:
+            if len(obj.werkwijze) > 0:
+                for x in obj.werkwijze:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Bijzonderheden: </div>')
-            if len(o.Bijzonder) > 0:
-                for x in o.Bijzonder:
+            if len(obj.bijzonder) > 0:
+                for x in obj.bijzonder:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Hoetetesten: </div>')
-            if len(o.Hoetetesten) > 0:
-                for x in o.Hoetetesten:
+            if len(obj.hoetetesten) > 0:
+                for x in obj.hoetetesten:
                     s.append('<p>%s</p>' % x)
             s.append('<hr /><div class="headr">Testgevallen: </div>')
-            if len(o.Testgevallen) > 0:
-                for x in o.Testgevallen:
+            if len(obj.testgevallen) > 0:
+                for x in obj.testgevallen:
                     s.append('<p>%s</p>' % x)
         elif h == "Relaties":
-            hr = ('<a href="%sshow.py?type=item&amp;what=$$&amp;proj=%s&amp;cat=$$&amp;which=$$">$$</a>' % (cgipad,self.proj))
+            hr = ('<a href="%sshow.py?type=item&amp;what=$$&amp;proj=%s&amp;'
+                'cat=$$&amp;which=$$">$$</a>' % (common.cgipad,self.proj))
             href = hr.replace("$$","%s")
-            for x in o.relnaar.keys():
-                if x == "userspec":  t = "Hoort bij gebruikersspecificatie"
-                elif x == "functask":  t = "wordt gebruikt door gebruikerstaak"
-                elif x == "funcproc":  t = "wordt gebruikt door functioneel proces"
-                elif x == "funcdata":  t = "Naar Funcdata"
-                elif x == "techtask":  t = "hoort bij technische taak (job/transactie)"
-                elif x == "techproc":  t = "hoort bij technisch(e) proces(sen)"
-                elif x == "techdata":  t = "Naar Techdata"
-                elif x == "procproc":  t = "Naar Procproc"
+            for x in obj.relnaar.keys():
+                if x == "userspec":
+                    t = "Hoort bij gebruikersspecificatie"
+                elif x == "functask":
+                    t = "wordt gebruikt door gebruikerstaak"
+                elif x == "funcproc":
+                    t = "wordt gebruikt door functioneel proces"
+                elif x == "funcdata":
+                    t = "Naar Funcdata"
+                elif x == "techtask":
+                    t = "hoort bij technische taak (job/transactie)"
+                elif x == "techproc":
+                    t = "hoort bij technisch(e) proces(sen)"
+                elif x == "techdata":
+                    t = "Naar Techdata"
+                elif x == "procproc":
+                    t = "Naar Procproc"
                 s.append('<span class="headr">%s: </span>' % t)
                 h = ""
-                for y in o.relnaar[x]:
+                for y in obj.relnaar[x]:
                     s.append(h)
                     if h == "": h = ", "
                     s.append(href % (x[:4],x[4:],y,y))
                 s.append('<br />')
-            for x in o.relvan.keys():
-                if x == "userspec":  t = "Bijbehorende gebruikersspecificatie(s)"
-                elif x == "functask":  t = "Bijbehorende gebruikersta(a)k(en)"
-                elif x == "funcproc":  t = "Bijbehorende functione(e)le proces(sen)"
-                elif x == "funcdata":  t = "Van Funcdata"
-                elif x == "techtask":  t = "Bijbehorende technische ta(a)k(en) (job/transactie)"
-                elif x == "techproc":  t = "Bijbehorend(e) technisch(e) proces(sen)"
-                elif x == "techdata":  t = "wordt technisch verder gespecificeerd in"
-                elif x == "procproc":  t = "Bijbehorende realisatie/procedurebeschrijving(en)"
+            for x in obj.relvan.keys():
+                if x == "userspec":
+                    t = "Bijbehorende gebruikersspecificatie(s)"
+                elif x == "functask":
+                    t = "Bijbehorende gebruikersta(a)k(en)"
+                elif x == "funcproc":
+                    t = "Bijbehorende functione(e)le proces(sen)"
+                elif x == "funcdata":
+                    t = "Van Funcdata"
+                elif x == "techtask":
+                    t = "Bijbehorende technische ta(a)k(en) (job/transactie)"
+                elif x == "techproc":
+                    t = "Bijbehorend(e) technisch(e) proces(sen)"
+                elif x == "techdata":
+                    t = "wordt technisch verder gespecificeerd in"
+                elif x == "procproc":
+                    t = "Bijbehorende realisatie/procedurebeschrijving(en)"
                 s.append('<span class="headr">%s: </span>' % t)
                 h = ""
-                for y in o.relvan[x]:
+                for y in obj.relvan[x]:
                     s.append(h)
                     if h == "": h = ", "
                     s.append(href % (x[:4],x[4:],y,y))
@@ -579,267 +603,186 @@ class printXMLObject:
         #   techdata gegevens (functie,opbouw,toegang,relatie,levensloop)>
         elif sel == "txtAttr":
             self.h = ""
-            if len(self.dh.Attribuut) > 0:
-                for x in self.dh.Attribuut:
-                    for y in self.dh.Toegang.keys():
+            if len(self.dh.attribuut) > 0:
+                for x in self.dh.attribuut:
+                    for y in self.dh.toegang.keys():
                         if y == x[0]:
-                            hself.h = ("deze (%s)" % self.dh.Toegang[y])
+                            hself.h = ("deze (%s)" % self.dh.toegang[y])
                             break
-                    for y in self.dh.Relatie.keys():
+                    for y in self.dh.relatie.keys():
                         if y == x[0]:
-                            hself.h = ('%s' % self.dh.Relatie[y])
+                            hself.h = ('%s' % self.dh.relatie[y])
                             break
                     rgl.append('naam: %s (%s), sleutel voor %s\noms:  %s\nbijz: %s\n\n' % (x[0],x[1],hh,x[2],x[3]))
         elif sel == "txtBaten":
-            if len(self.dh.Omgeving) > 0:
-                rgl.append(self.dh.Omgeving[0])
+            rgl.append(self.dh.baten)
         elif sel == "txtBeeld":
-            if len(self.dh.Beeld) > 0:
-                for x in self.dh.Beeld:
+            if len(self.dh.beeld) > 0:
+                for x in self.dh.beeld:
                     rgl.append(x)
         elif sel == "txtBeschr":
-            if len(self.dh.Beschrijving) > 0:
-                for x in self.dh.Beschrijving:
+            if len(self.dh.beschrijving) > 0:
+                for x in self.dh.beschrijving:
                     rgl.append(x)
         elif sel == "txtBijzonder":
-            if len(self.dh.Bijzonder) > 0:
-                for x in self.dh.Bijzonder:
+            if len(self.dh.bijzonder) > 0:
+                for x in self.dh.bijzonder:
                     rgl.append(x)
         elif sel == "txtCond":
-            if len(self.dh.Condities) > 0:
-                for x in self.dh.Condities:
+            if len(self.dh.condities) > 0:
+                for x in self.dh.condities:
                     rgl.append(x)
         elif sel == "txtDoel":
             if self.zoek == "techtask":
-                if len(self.dh.Doel) > 0:
-                    for x in self.dh.Doel:
+                if len(self.dh.doel) > 0:
+                    for x in self.dh.doel:
                         rgl.append(x)
             else:
-                rgl.append(self.dh.Doel)
+                rgl.append(self.dh.doel)
         elif sel == "txtFunc":
-            if len(self.dh.Functie) > 0:
-                for x in self.dh.Functie:
+            if len(self.dh.functie) > 0:
+                for x in self.dh.functie:
                     rgl.append(x)
         elif sel == "txtFuncA":
-            if len(self.dh.FuncAanv) > 0:
-                for x in self.dh.FuncAanv:
+            if len(self.dh.funcaanv) > 0:
+                for x in self.dh.funcaanv:
                     rgl.append(x)
         elif sel == "txtFunctie":
-            rgl.append(self.dh.Functie)
+            rgl.append(self.dh.functie)
         elif sel == "txtFysloc":
-            rgl.append(self.dh.Fysloc)
+            rgl.append(self.dh.fysloc)
         elif sel == "txtHoeTesten":
-            if len(self.dh.Hoetetesten) > 0:
-                for x in self.dh.Hoetesten:
+            if len(self.dh.hoetetesten) > 0:
+                for x in self.dh.hoetetesten:
                     rgl.append(x)
         elif sel == "txtInvoer":
-            if len(self.dh.Invoer) > 0:
-                for x in self.dh.Invoer:
+            if len(self.dh.invoer) > 0:
+                for x in self.dh.invoer:
                     rgl.append(x)
         elif sel == "txtKort":
-            rgl.append(self.dh.Kort)
+            rgl.append(self.dh.kort)
         elif sel == "txtKosten":
-            if len(self.dh.Omgeving) > 0:
-                rgl.append(self.dh.Omgeving[1])
+            rgl.append(self.dh.kosten)
         elif sel == "txtLifeC":
-            if len(self.dh.Levensloop) > 0:
-                for x in self.dh.Levensloop:
+            if len(self.dh.levensloop) > 0:
+                for x in self.dh.levensloop:
                     rgl.append(x)
         elif sel == "txtLink":
-            rgl.append(self.dh.Link)
+            rgl.append(self.dh.link)
         elif sel == "txtNaam":
-            rgl.append(self.dh.Naam)
+            rgl.append(self.dh.naam)
         elif sel == "txtNummer":
-            rgl.append(self.dh.Nummer)
+            rgl.append(self.dh.nummer)
         elif sel == "txtOmg":
-            if len(self.dh.Omgeving) > 0:
-                for x in range(2,len(self.dh.Omgeving)):
-                    rgl.append(self.dh.Omgeving[x])
+            if len(self.dh.omgeving) > 0:
+                for x in self.dh.omgeving:
+                    rgl.append(x)
         elif sel == "txtOms":
             #~ if len(self.dh.Oms) > 0:
                 #~ for x in self.dh.Oms:
                     #~ rgl.append(x)
-            rgl.append(self.dh.Oms)
+            rgl.append(self.dh.oms)
         elif sel == "txtOplos":
-            if len(self.dh.Oplossing) > 0:
-                for x in self.dh.Oplossing:
+            if len(self.dh.oplossing) > 0:
+                for x in self.dh.oplossing:
                     rgl.append(x)
         elif sel == "txtOpm":
             #~ if len(self.dh.Status) > 0:
                 #~ for x in self.dh.Status:
                     #~ rgl.append(x)
-            rgl.append(self.dh.Status)
+            rgl.append(self.dh.status)
         elif sel == "txtOpmerking":
-            if len(self.dh.Opmerkingen) > 0:
-                for x in self.dh.Opmerkingen:
+            if len(self.dh.opmerkingen) > 0:
+                for x in self.dh.opmerkingen:
                     rgl.append(x)
         elif sel == "txtPeriode":
-            if len(self.dh.Periode) > 0:
-                for x in self.dh.Periode:
+            if len(self.dh.periode) > 0:
+                for x in self.dh.periode:
                     rgl.append(x)
         elif sel == "txtProduct":
-            if len(self.dh.Product) > 0:
-                for x in self.dh.Product:
+            if len(self.dh.product) > 0:
+                for x in self.dh.product:
                     rgl.append(x)
         elif sel == "txtRealA":
-            if len(self.dh.Realisatie) > 0:
-                for x in self.dh.Realisatie:
+            if len(self.dh.realisatie) > 0:
+                for x in self.dh.realisatie:
                     rgl.append(x)
         elif sel == "txtStart":
-            rgl.append(self.dh.Start)
+            rgl.append(self.dh.start)
         elif sel == "txtTechA":
-            if len(self.dh.TechAanv) > 0:
-                for x in self.dh.TechAanv:
+            if len(self.dh.techaanv) > 0:
+                for x in self.dh.techaanv:
                     rgl.append(x)
         elif sel == "txtTestset":
             if len(self.dh.Testgevallen) > 0:
-                for x in self.dh.Testgevallen:
+                for x in self.dh.testgevallen:
                     rgl.append(x)
         elif sel == "txtTekst":
-            if len(self.dh.Tekst) > 0:
-                for x in self.dh.Tekst:
+            if len(self.dh.tekst) > 0:
+                for x in self.dh.tekst:
                     rgl.append(x)
         elif sel == "txtTitel":
-            rgl.append(self.dh.Titel)
+            rgl.append(self.dh.titel)
         elif sel == "txtUitvoer":
-            if len(self.dh.Uitvoer) > 0:
-                for x in self.dh.Uitvoer:
+            if len(self.dh.uitvoer) > 0:
+                for x in self.dh.uitvoer:
                     rgl.append(x)
         elif sel == "txtVerloop":
-            if len(self.dh.Verloop) > 0:
-                for x in self.dh.Verloop:
+            if len(self.dh.verloop) > 0:
+                for x in self.dh.verloop:
                     rgl.append(x)
         elif sel == "txtWaarvoor":
-            if len(self.dh.Waarvoor) > 0:
-                for x in self.dh.Waarvoor:
+            if len(self.dh.waarvoor) > 0:
+                for x in self.dh.waarvoor:
                     rgl.append(x)
         elif sel == "txtWanneer":
-            if len(self.dh.Wanneer) > 0:
-                for x in self.dh.Wanneer:
+            if len(self.dh.wanneer) > 0:
+                for x in self.dh.wanneer:
                     rgl.append(x)
         elif sel == "txtWens":
-            rgl.append(self.dh.Wens)
+            rgl.append(self.dh.wens)
         elif sel == "txtWie":
-            if len(self.dh.Wie) > 0:
-                for x in self.dh.Wie:
+            if len(self.dh.wie) > 0:
+                for x in self.dh.wie:
                     rgl.append(x)
         else:
-            hl1 = ["selUserspec","selUserwijz","selFunctask","selFuncproc","selFuncdata","selTechtask","selTechproc","selTechdata","selProcproc"]
-            hl2 = ["userspec","userwijz","functask","funcproc","funcdata","techtask","techproc","techdata","procproc"]
-            try:
-                i = hl1.find(sel)
-            except:
-                selfound = False
-            else:
-                selfound = True
-            if selfound:
-                #~ self.h = "\n"
-                lh = ItemList(hl2[i]) # was lself.h = ItemList(hl2[i])
-                #~ lh.read() # -  zit al in __init__
-                for x in range(lh.aantItems):
-                    z = lh.Items[x]
-                    slc = ""
-                    if i == 0:
-                        zk = rh.Userspec
-                    elif i == 1:
-                        zk = rh.Userspec
-                    elif i == 2:
-                        zk = rh.Functask
-                    elif i == 3:
-                        zk = rh.Funcproc
-                    elif i == 4:
-                        zk = rh.Funcdata
-                    elif i == 5:
-                        zk = rh.Techtask
-                    elif i == 6:
-                        zk = rh.Techproc
-                    #~ elif i == 7:
-                        #~ zk = rh.Techdata
-                    elif i == 8:
-                        zk = rh.Procproc
-                    for y in zk:
-                        if z == y:
-                            slc = " selected"
-                            break
-                    hs = ('      <option%s value="%s">%s: %s</option>' % (slc,z[0],z[0],z[1]))
-                    rgl.append(hs)
-                rgl.append("    ")
+            hl1 = ["selUserspec", "selUserwijz", "selFunctask", "selFuncproc",
+                "selFuncdata", "selTechtask", "selTechproc", "selTechdata",
+                "selProcproc"]
+            hl2 = ["userspec", "userwijz", "functask", "funcproc", "funcdata",
+                "techtask", "techproc", "techdata", "procproc"]
+            for idx, item in enumerate(hl1):
+                if item == sel:
+                    #~ self.h = "\n"
+                    lh = ItemList(hl2[idx]) # was lself.h = ItemList(hl2[i])
+                    #~ lh.read() # -  zit al in __init__
+                    for item in lh.items:
+                        sel_text = ""
+                        if idx == 0:
+                            zk = self.rh.relnaar['userspec']
+                        elif idx == 1:
+                            zk = self.rh.relnaar['userwijz']
+                        elif idx == 2:
+                            zk = self.rh.relnaar['functask']
+                        elif idx == 3:
+                            zk = self.rh.relnaar['funcproc']
+                        elif idx == 4:
+                            zk = self.rh.relnaar['funcdata']
+                        elif idx == 5:
+                            zk = self.rh.relnaar['techtask']
+                        elif idx == 6:
+                            zk = self.rh.relnaar['techproc']
+                        #~ elif idx == 7:
+                            #~ zk = self.rh.VTechdata
+                        elif idx == 8:
+                            zk = self.rh.relnaar['procproc']
+                        for y in zk:
+                            if y == item:
+                                sel_text = " selected"
+                                break
+                        hs = ('      <option%s value="%s">%s: %s</option>' % (
+                            sel_text, item[0], item[0], item[1]))
+                        rgl.append(hs)
+                    rgl.append("    ")
+                    break
         return rgl
-
-class testcaller:
-    def __init__(self):
-        self.soort = "item"
-        self.wat = "func" #
-        self.cat = "proc"
-        self.welk = "DocKies"
-        self.proj = "1"
-        self.zoek = "func_proc"
-        self.wijzig = False
-        if self.wijzig:
-            self.fnaam = htmlpad + "input_" + self.wat + self.cat + ".html"
-        elif self.wat == "start":
-            self.fnaam = htmlpad + "start_proj.html"
-        elif self.soort == "list":
-            self.fnaam = docroot + "data/" + self.wat + "_" + self.cat + ".xml" # bijvoorbeeld ook type=list&what=user&proj=2&cat=spec
-        elif self.welk == "nieuw":
-            self.fnaam = htmlpad + "nieuw.html"
-        else:
-            if self.zoek == "":
-                self.fnaam = docroot + "data/" + self.wat + ".xml"
-            else:
-                self.fnaam = docroot + "data/" + self.wat + "_" + self.cat + "/" + self.welk + ".xml"
-        self.htmlofxml = self.fnaam[-4:]
-        if self.htmlofxml[0] == ".": self.htmlofxml = self.htmlofxml[1:]
-        self.ok = True
-        if not exists(self.fnaam):
-            self.ok = False
-
-def test():
-    #~ proj = 1
-    #~ for x in selector(1):
-        #~ print x
-    #~ return
-    x = testcaller()
-    if not x.ok:
-        print x.fnaam,"bestaat niet"
-        return
-    s = printHTMLObject(x)
-    if not s.ok:
-        print "verkeerde soort opgegeven"
-        return
-    # test leesxml methode ---------------------------------------------
-    #~ s.leesxml()
-    #~ if s.dh.exists:
-        #~ if soort == "userspec":
-            #~ print ("%s %s: %s"% (soort,naam,s.dh.Kort))
-        #~ elif soort == "funcproc":
-            #~ print ("%s %s: %s"% (soort,naam,s.dh.Doel))
-    #~ else:
-        #~ print ("Geen informatie over %s %s"% (soort,naam))
-
-    #~ # print s.rh.__dict__
-    #~ if s.rh.exists:
-        #~ for x in s.rh.__dict__:
-            #~ if x in ["exists", "soort", "item", "fn", "fno"]:
-                #~ continue
-            #~ h = s.rh.__dict__[x]
-            #~ if len(h) > 0:
-                #~ print x,"relaties:"
-                #~ for y in h:
-                    #~ print y
-    #~ else:
-        #~ print ("Geen relaties bij %s %s"% (soort,naam))
-    # test leeslist methode ----------------------------------------------
-    #~ for x in s.leeslist():
-      #~ print x
-    # test toonxml methode ---------------------------------------------
-    s.leesxml()
-    l = s.toonxml()
-    f = file(htmlpad + "test.html","w")
-    for x in l:
-      f.write("%s\n" % x)
-    f.close()
-    # test bouwregel methode ---------------------------------------------
-
-if __name__ == '__main__':
-    test()
