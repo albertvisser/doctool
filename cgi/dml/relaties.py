@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import shutil
 from xml.etree.ElementTree import ElementTree, Element, SubElement
@@ -25,12 +26,12 @@ class Relaties(object):
             naartype = x.get('naartype')
             naar = x.get('naar')
             if vantype == self.search_soort and van == self.search_item:
-                if self.relnaar.has_key(naartype):
+                if naartype in self.relnaar:
                     self.relnaar[naartype].append(naar)
                 else:
                     self.relnaar[naartype] = [naar]
             if naartype == self.search_soort and naar == self.search_item:
-                if self.relvan.has_key(vantype):
+                if vantype in self.relvan:
                     self.relvan[vantype].append(van)
                 else:
                     self.relvan[vantype] = [van]
@@ -54,14 +55,14 @@ class Relaties(object):
         ElementTree(rt).write(self.fn)
 
     def add_relatie(self, soort, item):
-        if self.relnaar.has_key(soort):
+        if soort in self.relnaar:
             self.relnaar[soort] = [item]
         else:
             self.relnaar[soort].append(item)
         self.write(soort, item)
 
     def rem_relatie(self, soort, item):
-        if self.relnaar.has_key(soort):
+        if soort in self.relnaar:
             try:
                 self.relnaar[soort].remove(item)
             except:
@@ -75,14 +76,14 @@ class Relaties(object):
 
     def toon_relaties(self):
         for x in self.relnaar.keys():
-            print ("relaties vanuit hier naar de volgende %ss:" % x)
-            print "\t",
+            print("relaties vanuit hier naar de volgende %ss:" % x)
+            print("\t",)
             for y in self.relnaar[x]:
-                print y,
-            print
+                print(y, sep=",")
+            print()
         for x in self.relvan.keys():
-            print ("relaties vanuit de volgende %ss naar hier:" % x)
-            print "\t",
+            print("relaties vanuit de volgende %ss naar hier:" % x)
+            print("\t", sep=",")
             for y in self.relvan[x]:
-                print y,
-            print
+                print(y, sep=",")
+            print()

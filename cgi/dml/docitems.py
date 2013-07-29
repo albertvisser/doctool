@@ -4,6 +4,7 @@
 diverse documenten, alsmede functies om de laatst uitgegeven/eerstvolgend uit te
 geven volgnummers te bepalen"""
 
+from __future__ import print_function
 import os
 import shutil
 from datetime import date
@@ -188,20 +189,20 @@ class DocItem(object):
 
     def print_item(self):
         "standaard weergave van de document onderdelen"
-        print str(self), "bestaat: ", self.exists
+        print(str(self), "bestaat: ", self.exists)
         for prop in self.prpnames:
             h = self.__getattribute__(prop)
-            print prop + ": ",
+            print(prop + ": ", sep=",")
             if self.prpnames[prop]['type'] == 'list':
                 if len(h) > 0:
-                    print
+                    print()
                     for x in h:
-                        print x
+                        print(x)
                 else:
-                    print "(leeg)"
+                    print("(leeg)")
             else:
-                print h
-        print
+                print(h)
+        print()
 
     def nieuw(self):
         """maak een nieuwe documentweergave aan
