@@ -2,6 +2,7 @@
 syntax: glob
 
 *.bak
+*.bpl
 *~
 *pyc
 *log
@@ -9,3 +10,9 @@ syntax: glob
 *ini
 pylint*
 archive.zip
+tempfile.xml
+tempfile.html
+dml/*.xml
+data/*.xml
+dml/*.old
+data/*.old

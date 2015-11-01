@@ -2,11 +2,11 @@ import os
 import sys
 docroot = os.path.dirname(__file__)
 sys.path.append(os.path.join(docroot, "data")) # waar de eigenlijke programmatuur staat
-httppad = "http://doctool.pythoneer.nl/"
+httppad = "http://doctool.lemoncurry.nl/"
 stylepad = httppad + "style/"
 picpad = httppad + "images/"
 cgipad = httppad + "cgi-bin/"
-htmlpad = '/home/albert/www/pythoneer/doctool'
+htmlpad = '/home/albert/www/lemoncurry/doctool'
 dtdpad = httppad + "dtd/"
 #~ user_xmlpad = docroot + "user/"
 #~ func_xmlpad = docroot + "func/"

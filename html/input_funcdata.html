@@ -1,11 +1,11 @@
 <html>
 <head>
 <title>inputform</title>
-<link type="text/css" href="../style/DocTool.css" rel="stylesheet">
+<link type="text/css" href="/style/DocTool.css" rel="stylesheet">
 </head>
 <body>
 <!-- voorlopig geen aparte forms -->
-  <form action="http://doctool.pythoneer.nl/cgi-bin/edit.py">
+  <form action="/cgi-bin/edit.py">
   <input type="hidden" name="hWhat" id="hWhat" value="%s"/>
   <input type="hidden" name="hProj" id="hProj" value="%s"/>
   <input type="hidden" name="hCat" id="hCat" value="%s"/>
@@ -26,8 +26,8 @@
   <tr><td colspan="3"><hr /></td></tr>
   <tr><td colspan="3">Attributen:<br />(eerste regel: naam,type,entiteit,volgnummer; tweede regel: omschrijving; derde regel: bijzonderheden)</td></tr>
   <tr><td colspan="3"><textarea name="txtAttr" id="txtAttr" rows="16" cols="80" />%s
-naam: ...... (......) sleutel voor ........... 
-oms:  ..................... 
+naam: ...... (......) sleutel voor ...........
+oms:  .....................
 bijz: .....................</textarea></td></tr>
   <tr><td colspan="3">Levensloop:</td></tr>
   <tr><td colspan="3"><textarea name="txtLifeC" id="txtLifeC" rows="8" cols="80" />%s</textarea></td></tr>

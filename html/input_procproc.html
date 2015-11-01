@@ -1,11 +1,11 @@
 <html>
 <head>
 <title>inputform</title>
-<link type="text/css" href="../style/DocTool.css" rel="stylesheet">
+<link type="text/css" href="/style/DocTool.css" rel="stylesheet">
 </head>
 <body>
 <!-- voorlopig geen aparte forms -->
-  <form action="http://doctool.pythoneer.nl/cgi-bin/edit.py">
+  <form action="/cgi-bin/edit.py">
   <input type="hidden" name="hWhat" id="hWhat" value="%s"/>
   <input type="hidden" name="hProj" id="hProj" value="%s"/>
   <input type="hidden" name="hCat" id="hCat" value="%s"/>
@@ -24,26 +24,27 @@
     <td colspan="2"><input type="submit" name="pbKort" id="pbKort" value="Alle wijzigingen opslaan" /></td>
   </tr>
   <tr><td colspan="3"><hr /></td></tr>
-  <tr><td colspan="3">Uitgangssituatie:</td></tr>
+  <tr><td colspan="3">Invoersituatie (o.a. aanroep-argumenten):</td></tr>
   <tr><td colspan="3"><textarea name="txtInvoer" id="txtInvoer" rows="8" cols="80" />%s</textarea></td></tr>
   <tr><td colspan="3"><hr /></td></tr>
-  <tr><td colspan="3">Resultaatsituatie:</td></tr>
+  <tr><td colspan="3">Uitvoersituatie (incl. foutmeldingen):</td></tr>
   <tr><td colspan="3"><textarea name="txtUitvoer" id="txtUitvoer" rows="8" cols="80" />%s</textarea></td></tr>
   <tr><td colspan="3"><hr /></td></tr>
-  <tr><td colspan="3">Beschrijving:</td></tr>
-  <tr><td colspan="3"><textarea name="txtBeschr" id="txtBeschr" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3">Werkwijze:</td></tr>
+  <tr><td colspan="3"><textarea name="txtWerkwijze" id="txtWerkwijze" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Bijzonderheden:</td></tr>
+  <tr><td colspan="3"><textarea name="txtBijzonder" id="txtBijzonder" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Hoe te testen:</td></tr>
+  <tr><td colspan="3"><textarea name="txtHoeTesten" id="txtHoeTesten" rows="8" cols="80" />%s</textarea></td></tr>
+  <tr><td colspan="3"><hr /></td></tr>
+  <tr><td colspan="3">Testgevallen:</td></tr>
+  <tr><td colspan="3"><textarea name="txtTestset" id="txtTestset" rows="8" cols="80" />%s</textarea></td></tr>
   <tr><td colspan="3"><hr /></td></tr>
   <tr><td colspan="3">Relaties:</td></tr>
   <tr>
-    <td colspan="2">Hoort bij welk(e) functioneel proces(sen)</td>
-	<td><select size="2" name="selFuncproc" id="selFuncproc" multiple="multiple">%s</select></td>
-  </tr>
-  <tr>
-    <td colspan="2">Wordt gebruikt door welke technische ta(a)k(en) (job/transactie)</td>
-	<td><select size="2" name="selTechtask" id="selTechtask" multiple="multiple">%s</select></td>
-  </tr>
-  <tr>
-    <td colspan="2">Wordt gebruikt door welk(e) technisch(e) proces(sen)</td>
+    <td colspan="2">Hoort bij welk(e) technisch(e) proces(sen)</td>
 	<td><select size="2" name="selTechproc" id="selTechproc" multiple="multiple">%s</select></td>
   </tr>
   </table>
