@@ -20,7 +20,7 @@ Fout in aanroep: je hebt een onjuiste combinatie van hoofd- en<br />
 </body></html>
 """
 
-fouthml = ("""\
+fouthtml = ("""\
 <html><head></head><body>
 Fout in aanroep: voor de juiste werking moeten de volgende argumenten gevuld zijn:
 <br /><br />een hoofdcategorie (user, func, tech of proc)<br />

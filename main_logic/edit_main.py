@@ -6,16 +6,20 @@ fouthtml = "".join(common.fouthtml)
 
 def edit_properties(docobject, proplist, form):
     if docobject.exists:
-        dh.read()
-    if isinstance(docobject, docobj.Project):
-        h = form.get("txtNaam", None)
-        if h is not None:
-            dh.set_attr("naam", h)
+        docobject.read()
+    # als ik dit attribuut toevoeg krijg ik een probleem omdat de Project class geen
+    # "naam" property heeft
+    # wat ik met dit veld wil doen kan niet via het docobject
+    ## if isinstance(docobject, docobj.Project):
+        ## h = form.get("txtNaam", None)
+        ## if h is not None:
+            ## docobject.set_attr("naam", h)
     for ix, field in enumerate(proplist):
-        h = form.get(field, None)
-        if h is not None:
-            docobject.set_attr(docobject.prpnames[ix], h)
-    dh.write()
+        value = form.get(field, None)
+        if value is not None:
+            key = list(docobject.prpnames)[ix]
+            docobject.set_attr(key, value)
+    docobject.write()
 
 def edit_project(form):
     dh = docobj.Project(form.get("hProj"))
@@ -51,6 +55,7 @@ def edit_funcproc(form):
         "txtWie", "txtWaarvoor", "txtCond", "txtBeschr"), form)
 
 # funcdata (entiteit) (functie,opbouw,toegang,relatie,levensloop)>
+
 def edit_techtask(form):
     dh = docobj.Techtask(form.get("hWhich"))
     edit_properties(dh, ("txtKort", "txtDoel", "txtPeriode", "txtVerloop"), form)
@@ -61,6 +66,7 @@ def edit_techproc(form):
         "txtBeschr"), form)
 
 # techdata gegevens (functie,opbouw,toegang,relatie,levensloop)>
+
 def edit_procproc(form):
     dh = docobj.Procproc(form.get("hWhich"))
     edit_properties(dh, ("txtTitel", "txtDoel", "txtInvoer", "txtUitvoer",
@@ -117,10 +123,10 @@ edit_func = {
     "funcdocs": edit_funcdocs,
     "functask": edit_functask,
     "funcproc": edit_funcproc,
-    "funcdata": edit_funcdata,
+    ## "funcdata": edit_funcdata,
     "techtask": edit_techtask,
     "techproc": edit_techproc,
-    "techdata": edit_techdata,
+    ## "techdata": edit_techdata,
     "procproc": edit_procproc,
     }
 
@@ -140,13 +146,12 @@ def edit(form):
         return fout, regels
     #-- soort document bepalen
     h = wat + cat
-    if h not in typcat:
+    if h not in common.typcat:
         #-- fout melden bij niet bestaand soort document
         fout = True
         regels.append(common.soortfout_html.format(wat, cat))
         return fout, regels
     #-- item bijwerken: ingevulde gegevens lezen, deze omzetten in object en dit opslaan
-    self.form = form
     regels = edit_func[h](form)
     if h != "project":
         edit_relaties(form)
