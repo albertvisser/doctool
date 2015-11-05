@@ -323,7 +323,7 @@ class DocItem(object):
             while hh is not None:
                 h.remove(hh)
                 hh = h.find("regel")
-        for x in value:
+        for x in value.split("\n"):
             hh = SubElement(h,"regel")
             hh.text = x
 
