@@ -1,6 +1,6 @@
 import os
 from xml.etree.ElementTree import ElementTree, Element, SubElement
-from doctool_data_globals import datapad
+from doctool_data_common import datapad
 
 class DataError(Exception):
     pass

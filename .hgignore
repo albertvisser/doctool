@@ -12,7 +12,12 @@ pylint*
 archive.zip
 tempfile.xml
 tempfile.html
-dml/*.xml
-data/*.xml
-dml/*.old
-data/*.old
+dml**.xml
+data**.xml
+dml**.old
+data**.old
+dml/test*
+dml/xsl*
+html/images*
+html/style/old*
+main_logic/test*

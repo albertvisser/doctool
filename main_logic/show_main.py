@@ -129,13 +129,13 @@ class Show:
                     with open(os.path.join(common.htmlpad, "start.js")) as f:
                         self.lines.append([y.lstrip() for y in f])
                     self.lines.append(s[1])
-                elif '</body>' in x:
-                    # xhtml plaatje met link naar validator toevoegen
-                    self.lines.append('<p><br/><br/><br/>'
-                        '<a href="http://validator.w3.org/check?uri=referer">'
-                        '<img src="http://www.pythoneer.nl/images/valid-xhtml10"'
-                        ' alt="Valid XHTML 1.0!"/></a></p>')
-                    self.lines.append(x)
+                ## elif '</body>' in x:
+                    ## # xhtml plaatje met link naar validator toevoegen
+                    ## self.lines.append('<p><br/><br/><br/>'
+                        ## '<a href="http://validator.w3.org/check?uri=referer">'
+                        ## '<img src="/images/valid-xhtml10"'
+                        ## ' alt="Valid XHTML 1.0!"/></a></p>')
+                    ## self.lines.append(x)
                 elif x.startswith("<!-- titel"):
                     self.scherm_titel(x)
                 elif "menu" in x:

@@ -1,13 +1,14 @@
 import os
 import sys
 docroot = os.path.dirname(__file__)
-sys.path.append(os.path.join(docroot, "data")) # waar de eigenlijke programmatuur staat
+## sys.path.append(os.path.join(docroot, "data")) # waar de eigenlijke programmatuur staat
+sys.path.append("../dml") # waar de eigenlijke programmatuur staat
 httppad = "http://doctool.lemoncurry.nl/"
 stylepad = httppad + "style/"
 picpad = httppad + "images/"
 cgipad = httppad + "cgi-bin/"
-htmlpad = '/home/albert/www/lemoncurry/doctool'
-dtdpad = httppad + "dtd/"
+htmlpad = '../html' # was '/home/albert/www/lemoncurry/doctool'
+## dtdpad = httppad + "dtd/"
 #~ user_xmlpad = docroot + "user/"
 #~ func_xmlpad = docroot + "func/"
 #~ tech_xmlpad = docroot + "tech/"
