@@ -13,7 +13,7 @@ cgitb.enable()
 import sys
 from codecs import getwriter
 sys.stdout = getwriter("utf-8")(sys.stdout.buffer)
-import doctool.globals
+import doctool_globals
 from nieuw_main import nieuw
 
 def main():
@@ -28,7 +28,7 @@ def main():
     van_soort = form.getfirst("hType", "")
     van_naam = form.getfirst("hName", "")
     regels = nieuw(wat, catg, naam, oms, proj, van_soort, van_naam)
-    print "Content-Type: text/html"
+    print("Content-Type: text/html")
     if len(regels) == 1:
         print(regels[0])
         print()

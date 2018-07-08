@@ -73,7 +73,6 @@ class Show:
             form_ok = False
 
     def meld_fout(self):
-        p = file
         with open(os.path.join(common.htmlpad, "err_page.html")) as p:
             for x in p:
                 y = x
