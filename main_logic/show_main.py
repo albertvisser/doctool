@@ -284,8 +284,8 @@ class Show:
             self.printh = PrintXMLObject(self)
             for y in self.printh.regels:
                 self.lines.append(y)
-        if self.wat == "start" and self.proj == "0":
-            # used to be a warning about the dropdown menu possibly not working in IE
-            with open(os.path.join(common.htmlpad, "browser.html")) as f:
-                self.lines.extend([x for x in f])
+        # if self.wat == "start" and self.proj == "0":
+        #     # used to be a warning about the dropdown menu possibly not working in IE
+        #     with open(os.path.join(common.htmlpad, "browser.html")) as f:
+        #         self.lines.extend([x for x in f])
         self.lines.append('</span>')
