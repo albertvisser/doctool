@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 """Deze module bevat een aantal algemene classes bruikbaar als base classes voor
 diverse documenten, alsmede functies om de laatst uitgegeven/eerstvolgend uit te
 geven volgnummers te bepalen"""
@@ -9,10 +7,7 @@ import os
 import shutil
 from datetime import date
 from xml.etree.ElementTree import ElementTree, Element, SubElement
-from doctool_data_common import datapad
-
-class DataError(Exception):
-    pass
+from .doctool_data_common import datapad
 
 def laatste_proj():
     "functie om het nieuw te gebruiken projectnummer te bepalen"

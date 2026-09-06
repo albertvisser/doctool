@@ -1,8 +1,8 @@
 import os
-import common
-import docobj
-from relaties import Relaties
-from docitems import ItemList, laatste_wijz
+from . import common
+from dml import docobj
+from dml.relaties import Relaties
+from dml.docitems import ItemList, laatste_wijz
 
 def selector(proj, marge=True, size=0, form=True):
     s_proj = str(proj)

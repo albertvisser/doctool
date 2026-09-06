@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from docitems import DocItem
+from .docitems import DocItem
 
 class Project(DocItem):
     "lijst alle gegegevsn van een bepaald item"

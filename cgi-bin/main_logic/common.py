@@ -1,13 +1,12 @@
 import os
 import sys
 docroot = os.path.dirname(__file__)
-## sys.path.append(os.path.join(docroot, "data")) # waar de eigenlijke programmatuur staat
-sys.path.append("../dml") # waar de eigenlijke programmatuur staat
+# sys.path.append("../dml") # waar de eigenlijke programmatuur staat
 httppad = "http://doctool.lemoncurry.nl/"
 stylepad = httppad + "style/"
 picpad = httppad + "images/"
 cgipad = httppad + "cgi-bin/"
-htmlpad = '../html' # was '/home/albert/www/lemoncurry/doctool'
+htmlpad = 'html' # was '/home/albert/www/lemoncurry/doctool'
 ## dtdpad = httppad + "dtd/"
 #~ user_xmlpad = docroot + "user/"
 #~ func_xmlpad = docroot + "func/"
@@ -34,24 +33,27 @@ Fout in aanroep: voor de juiste werking moeten de volgende argumenten gevuld zij
      (de opgegeven waarde was: {})<br />
 """, '</body></html>')
 
-type_h = ["user","func","tech","proc","project"]
-titel_h = ["Gebruikersspecificatie","Functioneel ontwerp","Technisch ontwerp","Bouw","Projecten"]
-cat_h = [["spec","docs","wijz"],["docs","task","proc","data"],["task","proc","data"],["proc"],[""]]
-cmenu_h = [["lijst gewenste producten","lijst naslag documenten","lijst RFC`s/problemen"],
-           ["lijst algemene documenten","lijst gebruikerstaken","lijst functionele processen (invoer, uitvoer of hulp)",
-            "datamodel (entiteiten)"],
-           ["lijst jobs/transacties","lijst technische processen (programma's/procedures)",
+type_h = ["user", "func", "tech", "proc", "project"]
+titel_h = ["Gebruikersspecificatie", "Functioneel ontwerp", "Technisch ontwerp", "Bouw", "Projecten"]
+cat_h = [["spec", "docs", "wijz"], ["docs", "task", "proc", "data"], ["task", "proc", "data"],
+         ["proc"], [""]]
+cmenu_h = [["lijst gewenste producten", "lijst naslag documenten", "lijst RFC`s/problemen"],
+           ["lijst algemene documenten", "lijst gebruikerstaken",
+            "lijst functionele processen (invoer, uitvoer of hulp)", "datamodel (entiteiten)"],
+           ["lijst jobs/transacties", "lijst technische processen (programma's/procedures)",
             "datamodel (database, records, files, reports)"],
            ["bouw: lijst programmaspecificaties"],
            ["lijst projectbeschrijvingen"]]
-cnieuw_h = [["Nieuwe gebruikersspecificatie","Nieuw naslag document", "Nieuw RFC/probleem"],
-            ["Nieuw algemeen document","Nieuwe gebruikerstaak","Nieuw functioneel proces", "Nieuwe entiteit"],
+cnieuw_h = [["Nieuwe gebruikersspecificatie", "Nieuw naslag document", "Nieuw RFC/probleem"],
+            ["Nieuw algemeen document", "Nieuwe gebruikerstaak", "Nieuw functioneel proces",
+             "Nieuwe entiteit"],
             ["Nieuwe job/transactie", "Nieuw technisch proces", "Nieuwe data-layout"],
             ["Nieuwe programmabeschrijving"],
             ["Nieuwe projectbeschrijving"]]
-ctitel_h = [["lijst te maken producten","lijst naslag documenten","lijst RFC`s/problemen"],
-            ["lijst algemene documenten","lijst gebruikerstaken","lijst functionele processen","datamodel (entiteiten)"],
-            ["lijst jobs/transacties","lijst technische processen","datamodel (records e.d.)"],
+ctitel_h = [["lijst te maken producten", "lijst naslag documenten", "lijst RFC`s/problemen"],
+            ["lijst algemene documenten", "lijst gebruikerstaken", "lijst functionele processen",
+             "datamodel (entiteiten)"],
+            ["lijst jobs/transacties", "lijst technische processen", "datamodel (records e.d.)"],
             ["lijst programmaspecificaties"],
             ["lijst projectbeschrijvingen"]]
 titel_welk = {}

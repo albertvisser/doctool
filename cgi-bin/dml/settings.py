@@ -1,9 +1,6 @@
 import os
 from xml.etree.ElementTree import ElementTree, Element, SubElement
-from doctool_data_common import datapad
-
-class DataError(Exception):
-    pass
+from .doctool_data_common import datapad
 
 class Settings(object):
     def __init__(self):

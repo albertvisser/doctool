@@ -1,12 +1,10 @@
-# -*- coding: ISO-8859-1 -*-
-#-- versie 4
 # index op een categorie (welk_categorie.xml) zit in data, de documenten in data\welk_categorie
 # de xml parsers voor itemlist, relaties, en de rest allemaal in data
 # extra buttons source in toonxml
 import os
-import common
-from docitems import ItemList
-from printobject import PrintHTMLObject, PrintXMLObject
+from main_logic import common
+from dml.docitems import ItemList
+from main_logic.printobject import PrintHTMLObject, PrintXMLObject
 
 class Show:
     def __init__(self, soort, wat, project="0", categorie="", welk="",
@@ -33,15 +31,10 @@ class Show:
         #~ print soort,wat,project,categorie,welk,wijzigstand
         #~ if wat in type_h:
             #~ print "wat in type_h"
-        if self.soort != "list" and self.wat != "start" \
-                and self.wat not in common.type_h:
-            #  and self.wat != "nieuw"
+        if self.soort != "list" and self.wat not in (common.type_h + ['start']):
             self.form_ok = False
         if self.form_ok:
-            #~ print soort,wat,project,categorie,welk,wijzigstand
             self.bepaalfnaam()
-        #~ print self.fnaam,self.form_ok,self.htmlofxml
-        if self.form_ok:
             self.maakscherm() # was bouw_pagina
         else:
             self.meld_fout()
@@ -50,59 +43,56 @@ class Show:
         """bepaal de naam van het bestand op basis waarvan de inhoud voor het
         gedeelte 'contents' in het template bepaald wordt"""
         if self.wijzig:
-            self.fnaam = os.path.join(common.htmlpad,
-                "input_{}{}.html".format(self.wat, self.cat))
+            self.fnaam = os.path.join(common.htmlpad, f"input_{self.wat}{self.cat}.html")
         elif self.wat == "start":
             text = "other" if self.proj != "0" else "0"
-            self.fnaam = os.path.join(common.htmlpad,
-                "start_proj_{}.html".format(text))
+            self.fnaam = os.path.join(common.htmlpad, f"start_proj_{text}.html")
         elif self.soort == "list":
-            self.fnaam = os.path.join(common.docroot, "data",
-                 "{}_{}.xml".format(self.wat, self.cat)) # bijvoorbeeld ook type=list&what=user&proj=2&cat=spec
+            self.fnaam = os.path.join(common.docroot, "data", f"{self.wat}_{self.cat}.xml")
+            # bijvoorbeeld ook type=list&what=user&proj=2&cat=spec
         elif self.welk == "nieuw":
             self.fnaam = os.path.join(common.htmlpad, "nieuw.html")
         elif self.zoek == "":
-            self.fnaam = os.path.join(common.docroot, "data",
-                "{}.xml".format(self.wat))
+            self.fnaam = os.path.join(common.docroot, "data", f"{self.wat}.xml")
         else:
-            self.fnaam = os.path.join(common.docroot, "data",
-                '{}_{}'.format(self.wat, self.cat),
-                "{}.xml".format(self.welk.lower()))
+            self.fnaam = os.path.join(common.docroot, "data", f'{self.wat}_{self.cat}',
+                                      f"{self.welk.lower()}.xml")
         self.htmlofxml = os.path.splitext(self.fnaam)[1][1:]
         if not os.path.exists(self.fnaam):
             form_ok = False
 
     def meld_fout(self):
+        "format an error message"
         with open(os.path.join(common.htmlpad, "err_page.html")) as p:
             for x in p:
                 y = x
                 if "%s" in x:
-                    s = x.split("%s")
-                    if s[1] == "soort":
-                        y = ("%s%s%s" % (s[0],self.soort,s[2]))
-                        # y = y.replace(s[1], self.soort)
-                    elif s[1] == "wat":
-                        y = ("%s%s%s" % (s[0],self.wat,s[2]))
-                    elif s[1] == "proj":
-                        y = ("%s%s%s" % (s[0],self.proj,s[2]))
-                    elif s[1] == "cat":
-                        y = ("%s%s%s" % (s[0],self.cat,s[2]))
-                    elif s[1] == "welk":
-                        y = ("%s%s%s" % (s[0],self.welk,s[2]))
-                    elif s[1] == "fnaam":
-                        y = ("%s%s%s" % (s[0],self.fnaam,s[2]))
+                    before, replace, after = x.split("%s")
+                    if replace == "soort":
+                        y = self.soort
+                    elif replace == "wat":
+                        y = self.wat
+                    elif replace == "proj":
+                        y = self.proj
+                    elif replace == "cat":
+                        y = self.cat
+                    elif replace == "welk":
+                        y = self.welk
+                    elif replace == "fnaam":
+                        y = self.fnaam
+                    y = f'{before}{y}{after}'
                 self.lines.append(y.strip())
 
     def maakscherm(self):
+        """bouw de weer te geven pagina op
+        """
         if self.soort == "item" and self.welk != "nieuw" and not self.wijzig:
             # huidige vinden en volgende en vorige bepalen
             self.volgende = ""
             self.vorige = ""
             dh = ItemList(self.wat + self.cat, self.proj) # let op extra argument
             if dh.exists:
-                #~ self.lines.append( ("er zijn %s items in de lijst" % str(dh.aantItems))
                 for x in range(dh.aant_items):
-                #~ self.lines.append( ('%s heeft index %s in de lijst' % (self.wat,str(x)))
                     if dh.items[x][0] == self.welk:
                         xp = x - 1
                         if xp >= 0:
@@ -144,10 +134,10 @@ class Show:
                     self.lines.append(s[1])
                 elif "begin" in x:
                     s = x.split("$$")
-                    if self.soort == "list" and self.wat != "start": # op het startscherm geen linkerkolom
+                    if self.soort == "list" and self.wat != "start":
                         self.lines.append(s[1])
                         self.lines.append(s[2] % "kw3")
-                    else:
+                    else:  # op het startscherm geen linkerkolom
                         self.lines.append(s[2] % "full")
                 elif "iframe" in x: # contents
                     self.scherm_content()
@@ -155,8 +145,8 @@ class Show:
                     s = x.split("$$")
                     self.lines.append(s[1])
                     if self.wijzig:
-                        self.lines.append('     <span style="width: 10%;'
-                            ' float:left; ">&nbsp;</span>')
+                        self.lines.append(
+                            '     <span style="width: 10%; float:left; ">&nbsp;</span>')
                 else:
                     self.lines.append(x)
 

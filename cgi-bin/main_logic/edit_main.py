@@ -1,6 +1,6 @@
-import common
-import docobj
-from relaties import Relaties
+from . import common
+from dml import docobj
+from dml.relaties import Relaties
 
 fouthtml = "".join(common.fouthtml)
 

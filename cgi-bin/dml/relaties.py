@@ -1,8 +1,8 @@
-from __future__ import print_function
 import os
 import shutil
 from xml.etree.ElementTree import ElementTree, Element, SubElement
-from doctool_data_common import datapad
+from .doctool_data_common import datapad
+
 relatiesfile = os.path.join(datapad, "relaties.xml") # naam van het xml bestand
 backupfile = relatiesfile + '.old' # naam van de backup van het xml bestand
 

@@ -1,8 +1,7 @@
-# -*- coding: iso-8859-1 -*-
-import common
-import docobj
-from docitems import ItemList, laatste_proj
-from relaties import Relaties
+from . import common
+from dml import docobj
+from dml.docitems import ItemList, laatste_proj
+from dml.relaties import Relaties
 
 fouthtml = """<br/><br/>
 de overige argumenten waren - project: {}, van_soort: {}, van_naam: {}<br>
